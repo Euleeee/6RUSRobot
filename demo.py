@@ -5,7 +5,7 @@ def square(halfSideLength = 30, robotHeight = -90):
     """Calculate coordinates for a square
         `halfSideLength`: half length of the edge
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
-        `retrun`: List of positions and driving mode
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
 #  _______ 
 # |       |
@@ -32,7 +32,7 @@ def triangle(halfSideLength = 15, robotHeight = -90) :
     """Calculate coordinates for a samesided triangle
         `halfSideLength`: half sidelength of the triangle
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
-        `retrun`: List of positions and driving mode
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
 #     ^ 
 #    / \ 
@@ -47,7 +47,7 @@ def triangle(halfSideLength = 15, robotHeight = -90) :
 
     posTriangle = [
             [0,0,-70,0,0,0,'mov'],
-            [-hHalf,halfSideLength,-robotHeight,0,0,0,'mov'],
+            [-hHalf,halfSideLength,robotHeight,0,0,0,'mov'],
             [-hHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
             [hHalf,0,robotHeight,0,0,0,'lin'],
             [-hHalf,halfSideLength,robotHeight,0,0,0,'lin'],
@@ -64,7 +64,7 @@ def circle(radius = 15, resolution = 20, robotHeight = -90, n = 1, dir = 0):
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
         `n`: Number of rotations
         `dir`: Direction of the circle 
-        `retrun`: List of positions and driving mode
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
     
     t = np.linspace(0, n*2*m.pi, resolution*n)
@@ -82,13 +82,14 @@ def circle(radius = 15, resolution = 20, robotHeight = -90, n = 1, dir = 0):
     circlePos.append([0,0,-127,0,0,0,'mov'])
     return circlePos
 
+
 def eight(radius = 15, resolution = 20, robotHeight = -90, n = 1):
     """Calculate coordinates for a 2D-eight
         `radius`: Radius of the circle
         `resolution`: Number of circlepoints
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
         `n`: Number of rotations
-        `retrun`: List of positions and driving mode
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
     
     t = np.linspace(0, n*2*m.pi, resolution*n)
@@ -109,6 +110,65 @@ def eight(radius = 15, resolution = 20, robotHeight = -90, n = 1):
     return eightPos
 
 
+def pyramide(halfSideLength = 15, robotHeight = -90):
+    """Calculate coordinates for a tetrahedron
+        `halfSideLength`: half sidelength of the tetrahedron
+        `robotHeight`: z-Coordinate for 2D Base (have to be a negative value)
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
+        """
+
+    hBaseHalf = (halfSideLength * m.sqrt(3)/2)/2
+    hTetra = m.sqrt(6)*halfSideLength/3
+    pyramidePos = [
+            [0,0,-70,0,0,0,'mov'],
+
+            [0,0,robotHeight+hTetra,0,0,0,'mov'],
+            [-hBaseHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
+            [hBaseHalf,0,robotHeight,0,0,0,'lin'],
+            [0,0,robotHeight+hTetra,0,0,0,'mov'],
+
+            [hBaseHalf,0,robotHeight,0,0,0,'lin'],
+            [-hBaseHalf,halfSideLength,robotHeight,0,0,0,'lin'],
+            [0,0,robotHeight+hTetra,0,0,0,'mov'],
+
+            [-hBaseHalf,halfSideLength,robotHeight,0,0,0,'lin'],
+            [-hBaseHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
+            [0,0,robotHeight+hTetra,0,0,0,'mov'],
+
+            [0,0,-127,0,0,0,'mov']
+        ]
+        
+    return pyramidePos
+
+
+def pickPlace():
+    pickPlacePos = [[0,0,-70,0,0,0,'mov']]
+    return pickPlacePos
+
+
+def rectangleSignal():
+    rectanglePos = [[0,0,-70,0,0,0,'mov']]
+    return rectanglePos
+
+
+def cylinder():
+    cylinderPos = [[0,0,-70,0,0,0,'mov']]
+    return cylinderPos
+
+
+def spiral():
+    spiralPos = [[0,0,-70,0,0,0,'mov']]
+    return spiralPos
+
+
+def elaboratedCurve():
+    elaboratedCurvePos = [[0,0,-70,0,0,0,'mov']]
+    return elaboratedCurvePos
+
+
 if __name__ == '__main__':
-   ans = eight()
+    # Define return list values for demo sequences as this examples:
+    # [x,y,z,a,b,c,'mov'] -> PTP
+    # [x,y,z,a,b,c,'lin'] -> linear moving  
+   ans = pyramide()
    print(ans)
