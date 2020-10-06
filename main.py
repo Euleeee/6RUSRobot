@@ -65,4 +65,4 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:  # shutdown python program gently
         GPIO.cleanup()
-    print("6-RUS program was terminated by Keyboard-Interrupt. Please start the program to control the robot again!")
+    print("6-RUS program was terminated by Keyboard-Interrupt. Please start the program again to control the robot again!")
