@@ -1,4 +1,5 @@
 import math as m
+import numpy as np
 
 def square(halfSideLength = 30, robotHeight = -90):
     """Calculate coordinates for a square
@@ -12,15 +13,16 @@ def square(halfSideLength = 30, robotHeight = -90):
 # |_______|
 #  
 # | a | 
+# a = halfSideLength
 
     posSquare = [
-        [0,0,-70,0,0,0,'mov'],
-        [halfSideLength,halfSideLength,robotHeight,0,0,0,'mov'],
-        [-halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
-        [-halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
-        [halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
-        [halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
-        [0,0,-127,0,0,0,'mov']
+            [0,0,-70,0,0,0,'mov'],
+            [halfSideLength,halfSideLength,robotHeight,0,0,0,'mov'],
+            [-halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
+            [-halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
+            [halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
+            [halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
+            [0,0,-127,0,0,0,'mov']
         ]
 
     return posSquare
@@ -30,7 +32,7 @@ def triangle(halfSideLength = 15, robotHeight = -90) :
     """Calculate coordinates for a samesided triangle
         `halfSideLength`: half sidelength of the triangle
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
-        `retrun`: List of positions and 
+        `retrun`: List of positions and driving mode
         """
 #     ^ 
 #    / \ 
@@ -39,19 +41,74 @@ def triangle(halfSideLength = 15, robotHeight = -90) :
 # /_______\
 #  
 # | a | 
+# a = halfSideLength
 
     hHalf = (halfSideLength * m.sqrt(3)/2)/2
 
     posTriangle = [
-        [0,0,-70,0,0,0,'mov'],
-        [-hHalf,halfSideLength,-robotHeight,0,0,0,'mov'],
-        [-hHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
-        [hHalf,0,robotHeight,0,0,0,'lin'],
-        [-hHalf,halfSideLength,robotHeight,0,0,0,'lin'],
-        [0,0,-127,0,0,0,'mov']
+            [0,0,-70,0,0,0,'mov'],
+            [-hHalf,halfSideLength,-robotHeight,0,0,0,'mov'],
+            [-hHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
+            [hHalf,0,robotHeight,0,0,0,'lin'],
+            [-hHalf,halfSideLength,robotHeight,0,0,0,'lin'],
+            [0,0,-127,0,0,0,'mov']
         ]
 
     return posTriangle
 
+
+def circle(radius = 15, resolution = 20, robotHeight = -90, n = 1, dir = 0):
+    """Calculate coordinates for a 2D-circle
+        `radius`: Radius of the circle
+        `resolution`: Number of circlepoints
+        `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
+        `n`: Number of rotations
+        `dir`: Direction of the circle 
+        `retrun`: List of positions and driving mode
+        """
+    
+    t = np.linspace(0, n*2*m.pi, resolution*n)
+    circlePos = [[0,0,-70,0,0,0,'mov']]
+    for num in t:
+        if dir == 0:
+            x = m.cos(num)*radius
+            y = m.sin(num)*radius
+        else:
+            x = m.cos(num)*radius
+            y = m.sin(num-m.pi)*radius
+
+        circlePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    circlePos.append([0,0,-127,0,0,0,'mov'])
+    return circlePos
+
+def eight(radius = 15, resolution = 20, robotHeight = -90, n = 1):
+    """Calculate coordinates for a 2D-eight
+        `radius`: Radius of the circle
+        `resolution`: Number of circlepoints
+        `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
+        `n`: Number of rotations
+        `retrun`: List of positions and driving mode
+        """
+    
+    t = np.linspace(0, n*2*m.pi, resolution*n)
+    eightPos = [[0,0,-70,0,0,0,'mov']]
+    for num in t:
+            x = -m.sin(num)*radius
+            y = m.cos(num)*radius - radius
+            eightPos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    eightPos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    for num in t:
+            x = -m.sin(num)*radius
+            y = -m.cos(num)*radius + radius
+            eightPos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    eightPos.append([0,0,-127,0,0,0,'mov'])
+    return eightPos
+
+
 if __name__ == '__main__':
-   print('hi')
+   ans = eight()
+   print(ans)
