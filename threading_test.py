@@ -1,8 +1,10 @@
 import threading, time
 from threading import Timer
 
+from threading import Timer, Event
 
-from threading import Timer, Event 
+
+done = Event()  # init global Event
  
 def every_so_often(): 
     if not done.is_set(): 
@@ -12,8 +14,8 @@ def every_so_often():
 
 def main():
        
-    global done 
-    done = Event() 
+    # global done 
+    # done = Event() 
     Timer(5.0, every_so_often).start() 
     
     ###
@@ -22,7 +24,7 @@ def main():
     while True:
         time.sleep(0.5)
         ans = time.time() - t0
-        if ans > 11:
+        if ans > 14:
             print(ans)
             break
 
