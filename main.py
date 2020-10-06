@@ -17,7 +17,7 @@ def call_every_5_sec():
     """execute everything in here every 5 seconds after"""
     if not programStopped.is_set():  # only execute routine if program is not terminated
 
-        # Do the things we want to every so often
+        # Do the things we want to every so often  #TODO: explain connection to controller
         ans = con.stillConnected()
         if ans == False:
             print('controller not connected')    
