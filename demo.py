@@ -34,7 +34,7 @@ def triangle(halfSideLength = 15):
 #  /     \   
 # /_______\
 #  
-# |   a    | 
+# | a | 
 
     hHalf = (halfSideLength * m.sqrt(3)/2)/2
 
