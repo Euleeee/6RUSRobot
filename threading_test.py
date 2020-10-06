@@ -1,6 +1,4 @@
 import threading, time
-from threading import Timer
-
 from threading import Timer, Event
 
 

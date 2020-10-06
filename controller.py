@@ -16,7 +16,19 @@ def initCont():
 
     return joystick
 
-def    
+def stillConnected():
+    """Checks if a Controller is still connected.
+    `returns` boolean"""
+
+    pygame.joystick.quit()  # disconnect current controller (if available)
+    pygame.joystick.init()  # init controller again
+
+    # check if controller is present
+    if pygame.joystick.get_count() == 0:
+        return False
+    else:
+        return True
+
 
 def listen2Cont(joystick, currPose):
     """listens to controller once and returns pose
