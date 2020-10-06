@@ -30,7 +30,7 @@ def stillConnected():
         return True
 
 
-def listen2Cont(joystick, currPose):
+def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     """listens to controller once and returns pose
     `joystick`: Joystick class (given in init function)
     `currPose`: current pose of the robot
@@ -67,12 +67,20 @@ def listen2Cont(joystick, currPose):
         oBut = joystick.get_button(1)  # circle-Button
         triangBut = joystick.get_button(2)  # triangle-Button
         squareBut = joystick.get_button(3)  # square-Button
-        
 
-        if  oBut == 1:    # Kreis Taste zum Beenden druecken
+        # START ans SELECT
+        startBut = joystick.get_button(9)  # start
+        selectBut = joystick.get_button(8)  # select
+        
+        # modes and returning of the mode as string
+        if oBut == 1 and xBut == 0 and triangBut == 0 and squareBut == 0:
             return 'stop'
         elif xBut == 1 and triangBut == 1 and squareBut == 1 and oBut == 0:  # do homing procedure
             return 'homing'
+        elif startBut == 0 and selectBut == 1:  # start demo program
+            return 'demo'
+        elif startBut == 1 and selectBut == 0:  # change to manual control with controller
+            return 'manual'
 
 
     # add increments to values
