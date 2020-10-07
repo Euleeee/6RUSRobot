@@ -46,9 +46,6 @@ def init_global_joystick():
     global joystick
     joystick = con.initCont()
 
-    # global robotMode
-    # if joystick is not None and robotMode == '':  # controller connected => manual mode
-    #     robotMode = 'manual'
 
 def eval_controller_response(response):
     """evaluates the answer from the listen2Cont-function"""
