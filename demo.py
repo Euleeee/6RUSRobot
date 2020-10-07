@@ -1,8 +1,9 @@
 import math as m
 import numpy as np
+import time
 
 def square(halfSideLength = 30, robotHeight = -90):
-    """Calculate coordinates for a square
+    """Calculates coordinates for a square
         `halfSideLength`: half length of the edge
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
         `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
@@ -16,7 +17,6 @@ def square(halfSideLength = 30, robotHeight = -90):
 # a = halfSideLength
 
     posSquare = [
-            [0,0,-70,0,0,0,'mov'],
             [halfSideLength,halfSideLength,robotHeight,0,0,0,'mov'],
             [-halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
             [-halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
@@ -28,8 +28,8 @@ def square(halfSideLength = 30, robotHeight = -90):
     return posSquare
 
 
-def triangle(halfSideLength = 15, robotHeight = -90) :
-    """Calculate coordinates for a samesided triangle
+def triangle(halfSideLength = 15, robotHeight = -90):
+    """Calculates coordinates for a samesided triangle
         `halfSideLength`: half sidelength of the triangle
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
         `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
@@ -46,7 +46,6 @@ def triangle(halfSideLength = 15, robotHeight = -90) :
     hHalf = (halfSideLength * m.sqrt(3)/2)/2
 
     posTriangle = [
-            [0,0,-70,0,0,0,'mov'],
             [-hHalf,halfSideLength,robotHeight,0,0,0,'mov'],
             [-hHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
             [hHalf,0,robotHeight,0,0,0,'lin'],
@@ -58,7 +57,7 @@ def triangle(halfSideLength = 15, robotHeight = -90) :
 
 
 def circle(radius = 15, resolution = 20, robotHeight = -90, n = 1, dir = 0):
-    """Calculate coordinates for a 2D-circle
+    """Calculates coordinates for a 2D-circle
         `radius`: Radius of the circle
         `resolution`: Number of circlepoints
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
@@ -68,7 +67,7 @@ def circle(radius = 15, resolution = 20, robotHeight = -90, n = 1, dir = 0):
         """
     
     t = np.linspace(0, n*2*m.pi, resolution*n)
-    circlePos = [[0,0,-70,0,0,0,'mov']]
+    circlePos = []
     for num in t:
         if dir == 0:
             x = m.cos(num)*radius
@@ -84,7 +83,7 @@ def circle(radius = 15, resolution = 20, robotHeight = -90, n = 1, dir = 0):
 
 
 def eight(radius = 15, resolution = 20, robotHeight = -90, n = 1):
-    """Calculate coordinates for a 2D-eight
+    """Calculates coordinates for a 2D-eight
         `radius`: Radius of the circle
         `resolution`: Number of circlepoints
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
@@ -93,7 +92,7 @@ def eight(radius = 15, resolution = 20, robotHeight = -90, n = 1):
         """
     
     t = np.linspace(0, n*2*m.pi, resolution*n)
-    eightPos = [[0,0,-70,0,0,0,'mov']]
+    eightPos = []
     for num in t:
             x = -m.sin(num)*radius
             y = m.cos(num)*radius - radius
@@ -111,7 +110,7 @@ def eight(radius = 15, resolution = 20, robotHeight = -90, n = 1):
 
 
 def pyramide(halfSideLength = 15, robotHeight = -90):
-    """Calculate coordinates for a tetrahedron
+    """Calculates coordinates for a tetrahedron
         `halfSideLength`: half sidelength of the tetrahedron
         `robotHeight`: z-Coordinate for 2D Base (have to be a negative value)
         `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
@@ -120,7 +119,6 @@ def pyramide(halfSideLength = 15, robotHeight = -90):
     hBaseHalf = (halfSideLength * m.sqrt(3)/2)/2
     hTetra = m.sqrt(6)*halfSideLength/3
     pyramidePos = [
-            [0,0,-70,0,0,0,'mov'],
 
             [0,0,robotHeight+hTetra,0,0,0,'mov'],
             [-hBaseHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
@@ -141,51 +139,157 @@ def pyramide(halfSideLength = 15, robotHeight = -90):
     return pyramidePos
 
 
-def pickPlace(distx = 10,disty = 10,defaultHeight= -70,linHeight = 10, robotHeight = -90):
-    """Calculate coordinates for a 3x2 palette
+def pickPlace(distx = 10,disty = 10, midDist = 20,defaultHeight= -70,linHeight = 10, robotHeight = -90):
+    """Calculates coordinates for a 3x2 palette
         `distx`: Distance between the palette places in x direction
         `disty`: Distance between the palette places in y direction
+        `midDist`: Distance between mid and palette places 
         `defaulttHeight`: z-Coordinate for upper position of pick and place (have to be a negative value)
         `linHeight`: Linear distance to pick up/ place a piece 
         `robotHeight`: z-Coordinate for 2D Base (have to be a negative value)
         `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
-    pickPlacePos = [[0,0,-70,0,0,0,'mov']]
+    pickPlacePos = []
     yCount = [0, 1]
     xCount = [-1,0,1]
     for numx in xCount:
             for numy in yCount:
-                pickPlacePos.append([numx*distx, numy*disty-20, robotHeight+linHeight,0,0,0,'lin'])
-                pickPlacePos.append([numx*distx, numy*disty-20, robotHeight,0,0,0,'mov'])
-                pickPlacePos.append([numx*distx, numy*disty-20, robotHeight+linHeight,0,0,0,'lin'])
+                pickPlacePos.append([numx*distx, numy*disty-midDist, robotHeight+linHeight,0,0,0,'lin'])
+                pickPlacePos.append([numx*distx, numy*disty-midDist, robotHeight,0,0,0,'mov'])
+                pickPlacePos.append([numx*distx, numy*disty-midDist, robotHeight+linHeight,0,0,0,'lin'])
 
                 pickPlacePos.append([numx*distx, 0, defaultHeight,0,0,0,'mov'])
 
-                pickPlacePos.append([numx*distx, numy*disty+20, robotHeight+linHeight,0,0,0,'lin'])
-                pickPlacePos.append([numx*distx, numy*disty+20, robotHeight,0,0,0,'mov'])
-                pickPlacePos.append([numx*distx, numy*disty+20, robotHeight+linHeight,0,0,0,'lin'])
-                
+                pickPlacePos.append([numx*distx, numy*disty+midDist, robotHeight+linHeight,0,0,0,'lin'])
+                pickPlacePos.append([numx*distx, numy*disty+midDist, robotHeight,0,0,0,'mov'])
+                pickPlacePos.append([numx*distx, numy*disty+midDist, robotHeight+linHeight,0,0,0,'lin'])
+
                 pickPlacePos.append([numx*distx, 0, defaultHeight,0,0,0,'mov'])
+
+    pickPlacePos.append([0,0,-127,0,0,0,'mov'])
     return pickPlacePos
 
 
-def rectangleSignal():
-    rectanglePos = [[0,0,-70,0,0,0,'mov']]
+def rectangleSignal(flankHeight = 30, flankWidth = 10, robotHeight = -90):
+    """Calculates coordinates for rectangle Signal
+    `flankHeight`: Flank height
+    `flankWidth`: Flank width
+    `robotHeight`: z-Coordinate for 2D Base (have to be a negative value)
+    `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
+    """
+    rectanglePos = [
+        [flankHeight/2,-2.5*flankWidth, robotHeight,0,0,0,'mov'],
+
+        [-flankHeight/2,-2.5*flankWidth, robotHeight,0,0,0,'lin'],
+        [-flankHeight/2,-1.5*flankWidth, robotHeight,0,0,0,'lin'],
+
+        [flankHeight/2,-1.5*flankWidth, robotHeight,0,0,0,'lin'],
+        [flankHeight/2,-0.5*flankWidth, robotHeight,0,0,0,'lin'],
+
+        [-flankHeight/2,-0.5*flankWidth, robotHeight,0,0,0,'lin'],
+        [-flankHeight/2,0.5*flankWidth, robotHeight,0,0,0,'lin'],
+
+        [flankHeight/2,0.5*flankWidth, robotHeight,0,0,0,'lin'],
+        [flankHeight/2,1.5*flankWidth, robotHeight,0,0,0,'lin'],
+
+        [-flankHeight/2,1.5*flankWidth, robotHeight,0,0,0,'lin'],
+        [-flankHeight/2,2.5*flankWidth, robotHeight,0,0,0,'lin'],
+
+        [flankHeight/2,2.5*flankWidth, robotHeight,0,0,0,'mov']
+    ]
+
+    rectanglePos.append([0,0,-127,0,0,0,'mov'])
     return rectanglePos
 
 
-def cylinder():
-    cylinderPos = [[0,0,-70,0,0,0,'mov']]
+def cylinder(downCirc = -120, upCirc = -70,radius = 15, resolution = 20):
+    """Calculates coordinates for a cylinder
+    `downCirc`: Lower circle of the cylinder
+    `upCirc`: Upper circle of the cylinder
+    `radius`: Radius of the cylinder
+    `resolution`: Number of circlepoints
+    `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
+    """
+    t = np.linspace(0, 2*m.pi, resolution)
+    cylinderPos = []
+    for num in t:
+            x = -m.cos(num)*radius
+            y = m.sin(num)*radius
+
+            cylinderPos.append([x, y, downCirc, 0, 0, 0, 'mov'])
+
+    for num in t:
+            x = -m.cos(num)*radius
+            y = m.sin(num)*radius
+
+            cylinderPos.append([x, y, upCirc, 0, 0, 0, 'mov'])
+
+    cylinderPos.append([0,0,-127,0,0,0,'mov'])
     return cylinderPos
 
 
-def spiral():
-    spiralPos = [[0,0,-70,0,0,0,'mov']]
+def spiral(maxRadius = 25,resolution = 20, n = 5,robotHeight = -130):
+    """Calculates coordinates for a spiral
+    `maxRadius`: Max radius of the spiral
+    `resolution`: Number of circlepoints of one circle
+    `n`:Numer of circles
+    `robotHeight`: Start height of the spiral
+    `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
+    """
+
+    t = np.linspace(0,n*2*m.pi,n*resolution)
+    r = np.linspace(2,maxRadius,n*resolution)
+    spiralPos = []
+
+    for i,num in enumerate(t):
+        x = -m.cos(num)*r[i]
+        y = m.sin(num)*r[i]
+        z = robotHeight + 2*r[i]
+        spiralPos.append([x,y,z,0,0,0,'mov'])
+
     return spiralPos
 
 
-def elaboratedCurve():
-    elaboratedCurvePos = [[0,0,-70,0,0,0,'mov']]
+def elaboratedCurve(radius = 10, resolution = 20, robotHeight = -90,distx = 10,disty = 10, lines = 20):
+    """Calculates coordinates for a 2D-Model
+        `radius`: Radius of the circle
+        `resolution`: Number of circlepoints
+        `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
+        `distx`: x-distance between centerpoint of the circle and zero point of the coordinate system
+        `disty`: y-distance between centerpoint of the circle and zero point of the coordinate system
+        `lines`: Length of parallel lines
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
+        """
+    
+    t = np.linspace(0, 2*m.pi, resolution)
+    elaboratedCurvePos = []
+    for num in t:
+            x = -m.sin(num)*radius - distx
+            y = -m.cos(num)*radius - disty
+            elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    elaboratedCurvePos.append([2*radius+5, 0, robotHeight+15, 0, 0, 0, 'mov'])
+
+    for num in t:
+            x = -m.sin(num)*radius - distx
+            y = -m.cos(num)*radius + disty
+            elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    elaboratedCurvePos.append([-distx, disty, robotHeight+15, 0, 0, 0, 'mov'])
+    elaboratedCurvePos.append([0, disty, robotHeight, 0, 0, 0, 'mov'])
+    elaboratedCurvePos.append([0, disty, robotHeight, 0, 0, 0, 'mov'])
+    elaboratedCurvePos.append([lines, disty, robotHeight, 0, 0, 0, 'lin'])
+
+    z = np.linspace(0, m.pi, resolution/2)
+    for num in z:
+        x = m.sin(num)*radius + lines
+        y = m.cos(num)*radius
+        elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
+
+    elaboratedCurvePos.append([0, -disty, robotHeight, 0, 0, 0, 'lin'])
+    time.sleep(2) #TODO: Sleep wegmachen
+
+    elaboratedCurvePos.append([0,0,-127,0,0,0,'mov'])
     return elaboratedCurvePos
 
 
@@ -193,5 +297,5 @@ if __name__ == '__main__':
     # Define return list values for demo sequences as this examples:
     # [x,y,z,a,b,c,'mov'] -> PTP
     # [x,y,z,a,b,c,'lin'] -> linear moving  
-   ans = pickPlace()
+   ans = pyramide()
    print(ans)
