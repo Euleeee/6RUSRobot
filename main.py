@@ -151,8 +151,8 @@ def move_with_demo(robot):
     """Function to select a demo programm and execute it
     """
     modules = list_of_modules(demo)
-    Prog = random.choice(modules)
-    demoPosList = Prog()
+    Prog = random.choice(modules)  # choose a random demo 
+    demoPosList = Prog()  # execute chosen demo programm
 
     for pos in demoPosList:
         if pos[6] == 'lin':
