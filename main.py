@@ -20,15 +20,20 @@ def call_every_5_sec():
     """execute everything in here every 5 seconds after"""
     if not programStopped.is_set():  # only execute routine if program is not terminated
 
-        # Do the things we want to every so often  #TODO: explain connection to controller
-        ans = con.stillConnected()
-        if ans == False:
-            print('controller not connected')    
-        else:
-            # print('connected')
-            pass
+        # # Do the things we want to every so often  #TODO: explain connection to controller
+        # ans = con.stillConnected()
+        # if ans == False:
+        #     print('Controller not connected!')
+        # else:
+        #     # print('connected')
+        #     pass
 
-        init_global_joystick()  # (try to) init controller
+        # init_global_joystick()  # (try to) init controller
+
+        global joystick
+        import pygame
+
+        print('init?: ', pygame.joystick.get_count())
 
         Timer(5.0, call_every_5_sec).start()
 
@@ -74,13 +79,14 @@ def eval_controller_response(response):
         pass
         
 
-# TODO: add discriptions
 def startListening2Cont():
+    """start listening to controller every 0.1 s"""
     global shouldNotListen2Cont
     shouldNotListen2Cont.clear()
     Timer(0.1, call_every_tenth_sec).start()
 
 def stopListening2Cont():
+    """stop listening to controller. Needed if a program is listening to the controller itself"""
     global shouldNotListen2Cont
     shouldNotListen2Cont.set()
 
@@ -160,7 +166,6 @@ def main():
     init_global_joystick()
 
     startListening2Cont()  # start listening to controller
-
     
 
     while True:  # infinite loop only breaks on Keyboard-Interrupt
@@ -176,17 +181,22 @@ def main():
             startListening2Cont()  # listen again
             robotMode = 'stop'  # exit homing
 
-        while robotMode == 'manual':
+        while robotMode == 'manual':  # controll the robot with the controller
             mov_with_controller(robo)
 
-        while robotMode == 'stop':  # TODO
-            # time.sleep(0.001)
-            pass
+        while robotMode == 'stop':  # stop robot after next movement and do nothing
+            firstTime = True
+            while robotMode == 'stop':
+                if firstTime is True:
+                    print("Stopped robot!")
+                    firstTime == False
+                time.sleep(0.0001)  # limit loop time
+
 
 # Main program if this file get executed
 if __name__ == '__main__':
 
-    # Timer(5.0, call_every_5_sec).start()  # call subroutine every n-seconds TODO: manage thread
+    Timer(5.0, call_every_5_sec).start()  # call subroutine every n-seconds TODO: manage thread
 
     try:
         main()
