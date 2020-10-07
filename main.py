@@ -73,43 +73,6 @@ def eval_controller_response(response):
         # controller has given a pose
         pass
         
-    
-
-# Main program
-def main():
-    global robotMode
-    robotMode = 'manual'  # current mode (check documentation for all possible modes)
-
-    robo = sixRUS(stepperMode=1/32, stepDelay=0.002)
-
-    robo.homing('90')
-
-    init_global_joystick()
-
-    startListening2Cont()  # start listening to controller
-
-    
-
-    while True:  # infinite loop only breaks on Keyboard-Interrupt
-        # time.sleep(0.5)
-        while robotMode == 'demo':  # TODO
-            move_with_demo(robo)
-            time.sleep(2)  # wait and then execute the next function
-            
-        while robotMode == 'homing':
-            stopListening2Cont()  # stop listening to controller to prevent program change while homing
-            time.sleep(0.2)
-            robo.homing('90')  # use homing method '90'
-            startListening2Cont()  # listen again
-            robotMode = 'stop'  # exit homing
-
-        while robotMode == 'manual':
-            mov_with_controller(robo)
-
-        while robotMode == 'stop':  # TODO
-            # time.sleep(0.001)
-            pass
-
 
 # TODO: add discriptions
 def startListening2Cont():
@@ -185,8 +148,42 @@ def list_of_modules(packageName):
 
     return modulList
 
-# Main program if this file get executed
+############## Main program ###################
+def main():
+    global robotMode
+    robotMode = 'manual'  # current mode (check documentation for all possible modes)
 
+    robo = sixRUS(stepperMode=1/32, stepDelay=0.002)
+
+    robo.homing('90')
+
+    init_global_joystick()
+
+    startListening2Cont()  # start listening to controller
+
+    
+
+    while True:  # infinite loop only breaks on Keyboard-Interrupt
+        # time.sleep(0.5)
+        while robotMode == 'demo':  # TODO
+            move_with_demo(robo)
+            time.sleep(2)  # wait and then execute the next function
+            
+        while robotMode == 'homing':
+            stopListening2Cont()  # stop listening to controller to prevent program change while homing
+            time.sleep(0.2)
+            robo.homing('90')  # use homing method '90'
+            startListening2Cont()  # listen again
+            robotMode = 'stop'  # exit homing
+
+        while robotMode == 'manual':
+            mov_with_controller(robo)
+
+        while robotMode == 'stop':  # TODO
+            # time.sleep(0.001)
+            pass
+
+# Main program if this file get executed
 if __name__ == '__main__':
 
     # Timer(5.0, call_every_5_sec).start()  # call subroutine every n-seconds TODO: manage thread
