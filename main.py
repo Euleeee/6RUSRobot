@@ -49,9 +49,6 @@ def init_global_joystick():
     global joystick
     joystick = con.initCont()
 
-    # global robotMode
-    # if joystick is not None and robotMode == '':  # controller connected => manual mode
-    #     robotMode = 'manual'
 
 def eval_controller_response(response):
     """evaluates the answer from the listen2Cont-function"""
@@ -153,16 +150,20 @@ def move_with_demo(robot):
     modules = list_of_modules(demo)
     Prog = random.choice(modules)  # choose a random demo 
     demoPosList = Prog()  # execute chosen demo programm
+    prog = random.choice(modules)
+    demoPosList = prog()
 
     for pos in demoPosList:
-        if pos[6] == 'lin':
-            coord = pos[:6]
-            robot.mov(coord)
-
-        if pos[6] == 'mov':
-            coord = pos[:6]
-            robot.mov(coord)
-
+        try:
+            if pos[6] == 'lin':
+                coord = pos[:6]
+                robot.mov_lin(coord)
+            elif pos[6] == 'mov':
+                coord = pos[:6]
+                robot.mov(coord)
+        except IndexError:
+            robot.mov(pos)
+        
 
 def list_of_modules(packageName):
     """Function to find all modules in a package 

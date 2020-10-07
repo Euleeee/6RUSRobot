@@ -44,7 +44,6 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     dposx, dposy, dposz = 0, 0, 0
     dposaneg, dposapos, dposbneg, dposbpos, dposcneg, dposcpos = 0, 0, 0, 0, 0, 0
 
-
     for event in pygame.event.get(): # User did something.
                 
         # 0Z----> y  
