@@ -141,8 +141,31 @@ def pyramide(halfSideLength = 15, robotHeight = -90):
     return pyramidePos
 
 
-def pickPlace():
+def pickPlace(distx = 10,disty = 10,defaultHeight= -70,linHeight = 10, robotHeight = -90):
+    """Calculate coordinates for a 3x2 palette
+        `distx`: Distance between the palette places in x direction
+        `disty`: Distance between the palette places in y direction
+        `defaulttHeight`: z-Coordinate for upper position of pick and place (have to be a negative value)
+        `linHeight`: Linear distance to pick up/ place a piece 
+        `robotHeight`: z-Coordinate for 2D Base (have to be a negative value)
+        `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
+        """
     pickPlacePos = [[0,0,-70,0,0,0,'mov']]
+    yCount = [0, 1]
+    xCount = [-1,0,1]
+    for numx in xCount:
+            for numy in yCount:
+                pickPlacePos.append([numx*distx, numy*disty-20, robotHeight+linHeight,0,0,0,'lin'])
+                pickPlacePos.append([numx*distx, numy*disty-20, robotHeight,0,0,0,'mov'])
+                pickPlacePos.append([numx*distx, numy*disty-20, robotHeight+linHeight,0,0,0,'lin'])
+
+                pickPlacePos.append([numx*distx, 0, defaultHeight,0,0,0,'mov'])
+
+                pickPlacePos.append([numx*distx, numy*disty+20, robotHeight+linHeight,0,0,0,'lin'])
+                pickPlacePos.append([numx*distx, numy*disty+20, robotHeight,0,0,0,'mov'])
+                pickPlacePos.append([numx*distx, numy*disty+20, robotHeight+linHeight,0,0,0,'lin'])
+                
+                pickPlacePos.append([numx*distx, 0, defaultHeight,0,0,0,'mov'])
     return pickPlacePos
 
 
@@ -170,5 +193,5 @@ if __name__ == '__main__':
     # Define return list values for demo sequences as this examples:
     # [x,y,z,a,b,c,'mov'] -> PTP
     # [x,y,z,a,b,c,'lin'] -> linear moving  
-   ans = pyramide()
+   ans = pickPlace()
    print(ans)

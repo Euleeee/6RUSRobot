@@ -2,6 +2,9 @@ from sixRUS import sixRUS
 import time
 import controller as con
 import RPi.GPIO as GPIO
+import demo 
+import types
+import random
 
 from threading import Timer, Event
 
@@ -115,6 +118,7 @@ def stopListening2Cont():
     global shouldNotListen2Cont
     shouldNotListen2Cont.set()
 
+
 def mov_with_controller(robot, dt=0.1, scale=1):
     """""" # TODO: enter discription
 
@@ -139,6 +143,35 @@ def mov_with_controller(robot, dt=0.1, scale=1):
 
     startListening2Cont()  # let the program listen to the controller periodically again
 
+
+def move_with_demo(robot):
+    """Function to select a demo programm and execute it
+    """
+    modules = list_of_modules(demo)
+    Prog = random.choice(modules)
+    demoPosList = Prog()
+
+    for pos in demoPosList:
+        if pos[6] == 'lin':
+            coord = pos[:6]
+            robot.mov(coord)
+
+        if pos[6] == 'mov':
+            coord = pos[:6]
+            robot.mov(coord)
+
+
+def list_of_modules(packageName):
+    """Function to find all modules in a package 
+    `packageName`: Name of package
+    `return`: List of all modules in this package
+    """
+    modulList = []
+    for a in dir(demo):
+        if isinstance(getattr(demo, a), types.FunctionType):
+            modulList.append(getattr(demo,a))
+
+    return modulList
 
 # Main program if this file get executed
 
