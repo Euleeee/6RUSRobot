@@ -44,43 +44,44 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     dposx, dposy, dposz = 0, 0, 0
     dposaneg, dposapos, dposbneg, dposbpos, dposcneg, dposcpos = 0, 0, 0, 0, 0, 0
 
-    for event in pygame.event.get(): # User did something.
-                
-        # 0Z----> y  
-        # |
-        # |
-        # \/ x
+    pygame.event.poll()  # get one event
+    
+    # 0Z----> y  
+    # |
+    # |
+    # \/ x
 
-        dposx = joystick.get_axis(1)        # x-Achse(Linker Joystick unten-> positiv, oben -> negativ)
-        dposy = joystick.get_axis(0)        # y-Achse(Linker Joystick rechts -> positiv, links -> negativ)
-        dposz = joystick.get_axis(4) *-1    # z-Achse(Rechter Joystick oben -> positiv, unten -> negativ)
-        dposaneg = joystick.get_button(15)
-        dposapos = joystick.get_button(16)
-        dposbneg = joystick.get_button(14)
-        dposbpos = joystick.get_button(13)
-        dposcneg = joystick.get_button(4)
-        dposcpos = joystick.get_button(5)
+    dposx = joystick.get_axis(1)        # x-Achse(Linker Joystick unten-> positiv, oben -> negativ)
+    dposy = joystick.get_axis(0)        # y-Achse(Linker Joystick rechts -> positiv, links -> negativ)
+    dposz = joystick.get_axis(4) *-1    # z-Achse(Rechter Joystick oben -> positiv, unten -> negativ)
+    dposaneg = joystick.get_button(15)
+    dposapos = joystick.get_button(16)
+    dposbneg = joystick.get_button(14)
+    dposbpos = joystick.get_button(13)
+    dposcneg = joystick.get_button(4)
+    dposcpos = joystick.get_button(5)
 
-        # Buttons on the right side
-        xBut = joystick.get_button(0)  # x-Button
-        oBut = joystick.get_button(1)  # circle-Button
-        triangBut = joystick.get_button(2)  # triangle-Button
-        squareBut = joystick.get_button(3)  # square-Button
+    # Buttons on the right side
+    xBut = joystick.get_button(0)  # x-Button
+    oBut = joystick.get_button(1)  # circle-Button
+    triangBut = joystick.get_button(2)  # triangle-Button
+    squareBut = joystick.get_button(3)  # square-Button
 
-        # START ans SELECT
-        startBut = joystick.get_button(9)  # start
-        selectBut = joystick.get_button(8)  # select
-        
-        # modes and returning of the mode as string
-        if oBut == 1 and xBut == 0 and triangBut == 0 and squareBut == 0:
-            return 'stop'
-        elif xBut == 1 and triangBut == 1 and squareBut == 1 and oBut == 0:  # do homing procedure
-            return 'homing'
-        elif startBut == 0 and selectBut == 1:  # start demo program
-            return 'demo'
-        elif startBut == 1 and selectBut == 0:  # change to manual control with controller
-            return 'manual'
+    # START ans SELECT
+    startBut = joystick.get_button(9)  # start
+    selectBut = joystick.get_button(8)  # select
+    
+    # modes and returning of the mode as string
+    if oBut == 1 and xBut == 0 and triangBut == 0 and squareBut == 0:
+        return 'stop'
+    elif xBut == 1 and triangBut == 1 and squareBut == 1 and oBut == 0:  # do homing procedure
+        return 'homing'
+    elif startBut == 0 and selectBut == 1:  # start demo program
+        return 'demo'
+    elif startBut == 1 and selectBut == 0:  # change to manual control with controller
+        return 'manual'
 
+    pygame.event.clear()  # clear events in queue (only one event needed)
 
     # add increments to values
     pos[0] += dposx
@@ -93,7 +94,7 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     pos[5] += dposcneg
     pos[5] -= dposcpos
 
-    pos = checkMaxVal(pos,40,40,200,45,45,30)  # this uses degrees
+    pos = checkMaxVal(pos,40,40,200,40,40,30)  # this uses degrees
 
     pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
     

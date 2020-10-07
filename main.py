@@ -119,7 +119,7 @@ def stopListening2Cont():
     shouldNotListen2Cont.set()
 
 
-def mov_with_controller(robot, dt=0.1, scale=1):
+def mov_with_controller(robot, dt=0.1):
     """""" # TODO: enter discription
 
     stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
