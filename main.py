@@ -148,18 +148,20 @@ def move_with_demo(robot):
     """Function to select a demo programm and execute it
     """
     modules = list_of_modules(demo)
-    Prog = random.choice(modules)
-    demoPosList = Prog()
+    prog = random.choice(modules)
+    demoPosList = prog()
 
     for pos in demoPosList:
-        if pos[6] == 'lin':
-            coord = pos[:6]
-            robot.mov(coord)
-
-        if pos[6] == 'mov':
-            coord = pos[:6]
-            robot.mov(coord)
-
+        try:
+            if pos[6] == 'lin':
+                coord = pos[:6]
+                robot.mov_lin(coord)
+            elif pos[6] == 'mov':
+                coord = pos[:6]
+                robot.mov(coord)
+        except IndexError:
+            robot.mov(pos)
+        
 
 def list_of_modules(packageName):
     """Function to find all modules in a package 
