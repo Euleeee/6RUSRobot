@@ -93,8 +93,9 @@ def main():
     while True:  # infinite loop only breaks on Keyboard-Interrupt
         # time.sleep(0.5)
         while robotMode == 'demo':  # TODO
-            pass
-
+            move_with_demo(robo)
+            time.sleep(2)  # wait and then execute the next function
+            
         while robotMode == 'homing':
             stopListening2Cont()  # stop listening to controller to prevent program change while homing
             time.sleep(0.2)
@@ -109,6 +110,8 @@ def main():
             # time.sleep(0.001)
             pass
 
+
+# TODO: add discriptions
 def startListening2Cont():
     global shouldNotListen2Cont
     shouldNotListen2Cont.clear()
@@ -119,7 +122,7 @@ def stopListening2Cont():
     shouldNotListen2Cont.set()
 
 
-def mov_with_controller(robot, dt=0.1):
+def mov_with_controller(robot, dt=0.001):
     """""" # TODO: enter discription
 
     stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
@@ -151,6 +154,8 @@ def move_with_demo(robot):
     prog = random.choice(modules)
     demoPosList = prog()
 
+    global robotMode
+
     for pos in demoPosList:
         try:
             if pos[6] == 'lin':
@@ -161,6 +166,9 @@ def move_with_demo(robot):
                 robot.mov(coord)
         except IndexError:
             robot.mov(pos)
+        
+        if not robotMode == 'demo':  # break if the mode was changed
+            break
         
 
 def list_of_modules(packageName):
@@ -179,7 +187,7 @@ def list_of_modules(packageName):
 
 if __name__ == '__main__':
 
-    Timer(5.0, call_every_5_sec).start()  # call subroutine every n-seconds
+    # Timer(5.0, call_every_5_sec).start()  # call subroutine every n-seconds TODO: manage thread
 
     try:
         main()
