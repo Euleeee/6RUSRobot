@@ -13,42 +13,45 @@ from threading import Timer, Event
 programStopped = Event()  # Event to set if program gets
 shouldNotListen2Cont = Event()  # Event for checking if the program should listen to the Controller
 robotMode = ''
-joystick = None
-# joy = None  # global varriable for joystick-class
-
+joystick = None  # global varriable for joystick-class
+alreadyConnected = False  # check if contoller reconnected
 
 def call_every_5_sec():
     """execute everything in here every 5 seconds after"""
     if not programStopped.is_set():  # only execute routine if program is not terminated
 
-        # # Do the things we want to every so often  #TODO: explain connection to controller
-        # ans = con.stillConnected()
-        # if ans == False:
-        #     print('Controller not connected!')
-        # else:
-        #     # print('connected')
-        #     pass
-
-        # init_global_joystick()  # (try to) init controller
+        # TODO. comment a bit more
         print('Checking connection to controller:')
         controllerStatus = os.system('ls /dev/input/js0')  # checking for controller with linux
 
         global shouldNotListen2Cont
+        global alreadyConnected
         
-        if controllerStatus != 0:
-            print('Controller not connected!')
-            print('Try to connect to controller...')
-            ans = init_global_joystick()
-            if ans == None:
-                print('No controller availible! Trying again in 5 seconds...')
-                shouldNotListen2Cont.set()
+        if controllerStatus != 0:  # not connected
+            
+            alreadyConnected = False
+            print("Please connect controller! Retrying in 5 seconds...")
+            # print('Controller not connected!')
+            # print('Try to connect to controller...')
+            # ans = init_global_joystick()
+            # if ans == None:
+            #     print('No controller available! Trying again in 5 seconds...')
+            #     shouldNotListen2Cont.set()
+            # else:
+            #     print('Connection successfull!')
+            #     shouldNotListen2Cont.clear()
+
+        else:  # connected
+
+            if alreadyConnected:  # controller is still connected
+                print('Controller still connected.')
+                # no new initialisation required here
             else:
-                print('Connection successfull!')
-                shouldNotListen2Cont.clear()
-
-        else:
-            print('Controller (still) connected.')
-
+                stopListening2Cont()
+                init_global_joystick()  # init new joystick since the controller was reconnected or connected the first time
+                startListening2Cont()
+                alreadyConnected = True
+                print('Controller connected.')
 
         Timer(5.0, call_every_5_sec).start()
 
@@ -88,7 +91,10 @@ def eval_controller_response(response):
             pass
         else:
             raise Exception("Unknown answer from controller")
-        print(response)
+        
+        if robotMode != response:  # only print if the mode changes
+            print('Switching to: ', response)
+            
         robotMode = response  # set robot mode to the response
     else:
         # controller has given a pose
@@ -169,7 +175,7 @@ def list_of_modules(packageName):
 ############## Main program ###################
 def main():
     global robotMode
-    robotMode = 'manual'  # current mode (check documentation for all possible modes)
+    robotMode = 'demo'  # current mode (check documentation for all possible modes)
 
     robo = sixRUS(stepperMode=1/32, stepDelay=0.002)
 
@@ -177,9 +183,10 @@ def main():
 
     init_global_joystick()
 
+    call_every_5_sec()  # call subroutine every n-seconds TODO: manage thread
     startListening2Cont()  # start listening to controller
     
-
+        
     while True:  # infinite loop only breaks on Keyboard-Interrupt
         # time.sleep(0.5)
         while robotMode == 'demo':  # TODO
@@ -203,20 +210,18 @@ def main():
             while robotMode == 'stop':
                 if firstTime is True:
                     print("Stopped robot!")
-                    firstTime == False
+                    firstTime = False
                 time.sleep(0.0001)  # limit loop time
 
 
 # Main program if this file get executed
 if __name__ == '__main__':
 
-    call_every_5_sec()  # call subroutine every n-seconds TODO: manage thread
-
     try:
         main()
-    except KeyboardInterrupt:  # shutdown python program gently
+    except:  #except KeyboardInterrupt:  # shutdown python program gently
         GPIO.cleanup()  # cleanup GPIOs (to avoid warning on next startup)
         programStopped.set()  # set event for stopping threading
 
         # Exiting message
-        print("6-RUS program was terminated by Keyboard-Interrupt. (Please wait ca. 5s) \nPlease start the program again to control the robot again!")
+        print("6-RUS program was terminated Error or user-input (Please wait ca. 5s) \nPlease start the program again to control the robot again!")
