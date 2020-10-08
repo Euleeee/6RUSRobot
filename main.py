@@ -5,6 +5,7 @@ import RPi.GPIO as GPIO
 import demo 
 import types
 import random
+import os
 
 from threading import Timer, Event
 
@@ -29,6 +30,21 @@ def call_every_5_sec():
         #     pass
 
         # init_global_joystick()  # (try to) init controller
+        print('Checking connection to controller:')
+        controllerStatus = os.system('ls /dev/input/js0')
+        
+        if controllerStatus != 0:
+            print('Controller not connected!')
+            print('Try to connect to controller...')
+            ans = init_global_joystick()
+            if ans == None:
+                print('No controller availible! Trying again in 5 seconds...')
+            else:
+                print('Connection successfull!')
+
+        else:
+            print('Controller (still) connected.')
+
 
         global joystick
         import pygame
@@ -53,6 +69,7 @@ def init_global_joystick():
 
     global joystick
     joystick = con.initCont()
+    return joystick
 
 
 def eval_controller_response(response):
