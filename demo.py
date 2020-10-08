@@ -250,10 +250,10 @@ def spiral(maxRadius = 25,resolution = 20, n = 5,robotHeight = -130):
     return spiralPos
 
 
-def elaboratedCurve(radius = 10, resolution = 20, robotHeight = -90,distx = 10,disty = 10, lines = 20):
+def elaboratedCurve(radius = 10, resolution = 22, robotHeight = -90,distx = 10,disty = 10, lines = 20):
     """Calculates coordinates for a 2D-Model
         `radius`: Radius of the circle
-        `resolution`: Number of circlepoints
+        `resolution`: Number of circlepoints, must be a multiple of 4
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
         `distx`: x-distance between centerpoint of the circle and zero point of the coordinate system
         `disty`: y-distance between centerpoint of the circle and zero point of the coordinate system
@@ -261,26 +261,33 @@ def elaboratedCurve(radius = 10, resolution = 20, robotHeight = -90,distx = 10,d
         `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
     
-    t = np.linspace(0, 2*m.pi, resolution)
+    if resolution%4 != 0:
+        while resolution%4 != 0:
+            resolution += 1
+    
+    t = np.linspace(0, m.pi/2, int(resolution/4))
     elaboratedCurvePos = []
     for num in t:
-            x = -m.sin(num)*radius - distx
-            y = -m.cos(num)*radius - disty
+            x = m.cos(num)*radius - distx
+            y = -m.sin(num)*radius + disty
             elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
 
-    elaboratedCurvePos.append([2*radius+5, 0, robotHeight+15, 0, 0, 0, 'mov'])
+    t = np.linspace(0, 2*m.pi, resolution)
+    for num in t:
+            x = -m.sin(num)*radius - distx
+            y = m.cos(num)*radius - disty
+            elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
 
+    t = np.linspace(0, 3*m.pi/2, int(3*resolution/4))
     for num in t:
             x = -m.sin(num)*radius - distx
             y = -m.cos(num)*radius + disty
             elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
 
-    elaboratedCurvePos.append([-distx, disty, robotHeight+15, 0, 0, 0, 'mov'])
-    elaboratedCurvePos.append([0, disty, robotHeight, 0, 0, 0, 'mov'])
-    elaboratedCurvePos.append([0, disty, robotHeight, 0, 0, 0, 'mov'])
+    
     elaboratedCurvePos.append([lines, disty, robotHeight, 0, 0, 0, 'lin'])
 
-    z = np.linspace(0, m.pi, resolution/2)
+    z = np.linspace(0, m.pi, int(resolution/2))
     for num in z:
         x = m.sin(num)*radius + lines
         y = m.cos(num)*radius
@@ -290,6 +297,7 @@ def elaboratedCurve(radius = 10, resolution = 20, robotHeight = -90,distx = 10,d
     time.sleep(2) #TODO: Sleep wegmachen
 
     elaboratedCurvePos.append([0,0,-127,0,0,0,'mov'])
+    #return elaboratedCurvePos
     return elaboratedCurvePos
 
 
@@ -297,5 +305,5 @@ if __name__ == '__main__':
     # Define return list values for demo sequences as this examples:
     # [x,y,z,a,b,c,'mov'] -> PTP
     # [x,y,z,a,b,c,'lin'] -> linear moving  
-   ans = pyramide()
+   ans = elaboratedCurve()
    print(ans)
