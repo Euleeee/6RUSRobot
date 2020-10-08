@@ -97,7 +97,7 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     pos[5] += dposcneg
     pos[5] -= dposcpos
 
-    pos = checkMaxVal(pos,40,40,200,40,40,30)  # this uses degrees
+    pos = checkMaxVal(pos, 40, 40, 200, 40, 40, 30)  # this uses degrees
 
     pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
     

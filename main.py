@@ -45,11 +45,10 @@ def call_every_5_sec():
         else:
             print('Controller (still) connected.')
 
+        # global joystick
+        # import pygame
 
-        global joystick
-        import pygame
-
-        print('init?: ', pygame.joystick.get_count())
+        # print('init?: ', pygame.joystick.get_count())
 
         Timer(5.0, call_every_5_sec).start()
 
