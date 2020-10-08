@@ -31,23 +31,14 @@ def call_every_5_sec():
             
             alreadyConnected = False
             print("Please connect controller! Retrying in 5 seconds...")
-            # print('Controller not connected!')
-            # print('Try to connect to controller...')
-            # ans = init_global_joystick()
-            # if ans == None:
-            #     print('No controller available! Trying again in 5 seconds...')
-            #     shouldNotListen2Cont.set()
-            # else:
-            #     print('Connection successfull!')
-            #     shouldNotListen2Cont.clear()
-
+            
         else:  # connected
 
             if alreadyConnected:  # controller is still connected
                 print('Controller still connected.')
                 # no new initialisation required here
             else:
-                stopListening2Cont()
+                stopListening2Cont()  # stop listening as the controller gets initalised 
                 init_global_joystick()  # init new joystick since the controller was reconnected or connected the first time
                 startListening2Cont()
                 alreadyConnected = True
@@ -93,8 +84,8 @@ def eval_controller_response(response):
             raise Exception("Unknown answer from controller")
         
         if robotMode != response:  # only print if the mode changes
-            print('Switching to: ', response)
-            
+            print('Switching to:', response)
+
         robotMode = response  # set robot mode to the response
     else:
         # controller has given a pose
@@ -195,7 +186,7 @@ def main():
             
         while robotMode == 'homing':
             stopListening2Cont()  # stop listening to controller to prevent program change while homing
-            time.sleep(0.2)
+            time.sleep(1.5)  # wait a bit to reduce multiple homing attempts
             robo.homing('90')  # use homing method '90'
             startListening2Cont()  # listen again
             robotMode = 'stop'  # exit homing
@@ -219,9 +210,9 @@ if __name__ == '__main__':
 
     try:
         main()
-    except:  #except KeyboardInterrupt:  # shutdown python program gently
+    except:  # shutdown python program gently
         GPIO.cleanup()  # cleanup GPIOs (to avoid warning on next startup)
         programStopped.set()  # set event for stopping threading
 
         # Exiting message
-        print("6-RUS program was terminated Error or user-input (Please wait ca. 5s) \nPlease start the program again to control the robot again!")
+        print("\n6-RUS program was terminated due to user-input or an error (Please wait ca. 5s) \nPlease start the program again to control the robot again!")
