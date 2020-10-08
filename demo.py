@@ -2,10 +2,11 @@ import math as m
 import numpy as np
 import time
 
-def square(halfSideLength = 30, robotHeight = -90):
+def square(halfSideLength = 30, robotHeight = -90, n = 2):
     """Calculates coordinates for a square
         `halfSideLength`: half length of the edge
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
+        `n`: Number of rotations
         `retrun`: List of positions and driving mode. Exmaple: [x,y,z,a,b,c,'mov'] for PTP or [x,y,z,a,b,c,'lin'] for linear moving  
         """
 #  _______ 
@@ -15,20 +16,22 @@ def square(halfSideLength = 30, robotHeight = -90):
 #  
 # | a | 
 # a = halfSideLength
+    i = range(n)
+    posSquare = []
+    for num in i:
 
-    posSquare = [
-            [halfSideLength,halfSideLength,robotHeight,0,0,0,'mov'],
-            [-halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
-            [-halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
-            [halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'],
-            [halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'],
-            [0,0,-127,0,0,0,'mov']
-        ]
+        posSquare.append([halfSideLength,halfSideLength,robotHeight,0,0,0,'mov'])
+        posSquare.append([-halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'])
+        posSquare.append([-halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'])
+        posSquare.append([halfSideLength,-halfSideLength,robotHeight,0,0,0,'lin'])  
+
+    posSquare.append([halfSideLength,halfSideLength,robotHeight,0,0,0,'lin'])
+    posSquare.append([0,0,-127,0,0,0,'mov'])
 
     return posSquare
 
 
-def triangle(halfSideLength = 15, robotHeight = -90):
+def triangle(halfSideLength = 15, robotHeight = -90, n = 2):
     """Calculates coordinates for a samesided triangle
         `halfSideLength`: half sidelength of the triangle
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
@@ -42,17 +45,20 @@ def triangle(halfSideLength = 15, robotHeight = -90):
 #  
 # | a | 
 # a = halfSideLength
-
+    
     hHalf = (halfSideLength * m.sqrt(3)/2)/2
+    posTriangle = []
 
-    posTriangle = [
-            [-hHalf,halfSideLength,robotHeight,0,0,0,'mov'],
-            [-hHalf,-halfSideLength,robotHeight,0,0,0,'lin'],
-            [hHalf,0,robotHeight,0,0,0,'lin'],
-            [-hHalf,halfSideLength,robotHeight,0,0,0,'lin'],
-            [0,0,-127,0,0,0,'mov']
-        ]
+    i = range(n)
+    for num in i:
+        
+            posTriangle.append([-hHalf,halfSideLength,robotHeight,0,0,0,'mov'])
+            posTriangle.append([-hHalf,-halfSideLength,robotHeight,0,0,0,'lin'])
+            posTriangle.append([hHalf,0,robotHeight,0,0,0,'lin'])
+            
 
+    posTriangle.append([-hHalf,halfSideLength,robotHeight,0,0,0,'lin'])
+    posTriangle.append([0,0,-127,0,0,0,'mov'])
     return posTriangle
 
 
@@ -152,6 +158,7 @@ def pickPlace(distx = 10,disty = 10, midDist = 20,defaultHeight= -70,linHeight =
     pickPlacePos = []
     yCount = [0, 1]
     xCount = [-1,0,1]
+
     for numx in xCount:
             for numy in yCount:
                 pickPlacePos.append([numx*distx, numy*disty-midDist, robotHeight+linHeight,0,0,0,'lin'])
@@ -165,6 +172,7 @@ def pickPlace(distx = 10,disty = 10, midDist = 20,defaultHeight= -70,linHeight =
                 pickPlacePos.append([numx*distx, numy*disty+midDist, robotHeight+linHeight,0,0,0,'lin'])
 
                 pickPlacePos.append([numx*distx, 0, defaultHeight,0,0,0,'mov'])
+                
 
     pickPlacePos.append([0,0,-127,0,0,0,'mov'])
     return pickPlacePos
@@ -305,5 +313,5 @@ if __name__ == '__main__':
     # Define return list values for demo sequences as this examples:
     # [x,y,z,a,b,c,'mov'] -> PTP
     # [x,y,z,a,b,c,'lin'] -> linear moving  
-   ans = elaboratedCurve()
+   ans = square()
    print(ans)
