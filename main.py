@@ -94,8 +94,6 @@ def stopListening2Cont():
 def mov_with_controller(robot, dt=0.001):
     """""" # TODO: enter discription
 
-    stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
-
     ans = ''
     global joystick
 
@@ -112,8 +110,6 @@ def mov_with_controller(robot, dt=0.001):
         else:  # pose was given as an answer
             # print([round(n, 3) for n in ans])
             robot.mov(ans)
-
-    startListening2Cont()  # let the program listen to the controller periodically again
 
 
 def move_with_demo(robot):
@@ -182,7 +178,9 @@ def main():
             robotMode = 'stop'  # exit homing
 
         while robotMode == 'manual':  # controll the robot with the controller
+            stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
             mov_with_controller(robo)
+            startListening2Cont()  # let the program listen to the controller periodically again
 
         while robotMode == 'stop':  # stop robot after next movement and do nothing
             firstTime = True
