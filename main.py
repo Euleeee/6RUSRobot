@@ -31,7 +31,9 @@ def call_every_5_sec():
 
         # init_global_joystick()  # (try to) init controller
         print('Checking connection to controller:')
-        controllerStatus = os.system('ls /dev/input/js0')
+        controllerStatus = os.system('ls /dev/input/js0')  # checking for controller with linux
+
+        global shouldNotListen2Cont
         
         if controllerStatus != 0:
             print('Controller not connected!')
@@ -39,16 +41,14 @@ def call_every_5_sec():
             ans = init_global_joystick()
             if ans == None:
                 print('No controller availible! Trying again in 5 seconds...')
+                shouldNotListen2Cont.set()
             else:
                 print('Connection successfull!')
+                shouldNotListen2Cont.clear()
 
         else:
             print('Controller (still) connected.')
 
-        # global joystick
-        # import pygame
-
-        # print('init?: ', pygame.joystick.get_count())
 
         Timer(5.0, call_every_5_sec).start()
 
@@ -210,13 +210,13 @@ def main():
 # Main program if this file get executed
 if __name__ == '__main__':
 
-    Timer(5.0, call_every_5_sec).start()  # call subroutine every n-seconds TODO: manage thread
+    call_every_5_sec()  # call subroutine every n-seconds TODO: manage thread
 
     try:
         main()
     except KeyboardInterrupt:  # shutdown python program gently
         GPIO.cleanup()  # cleanup GPIOs (to avoid warning on next startup)
-        programStopped.set()  # set event for stopping interrupt
+        programStopped.set()  # set event for stopping threading
 
         # Exiting message
         print("6-RUS program was terminated by Keyboard-Interrupt. (Please wait ca. 5s) \nPlease start the program again to control the robot again!")
