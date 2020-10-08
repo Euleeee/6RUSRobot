@@ -36,6 +36,9 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     `currPose`: current pose of the robot
     `return`: pose-list with altered values (if return is a string it is a code or an error)
     """
+    if joystick is None:  # if no controller was given
+        return 'demo'  # return to demo mode
+
     pos = currPose  # make own varriable to write to
 
     pos = [pos[0], pos[1], pos[2], degrees(pos[3]), degrees(pos[4]), degrees(pos[5])]  # convert angles to DEG
