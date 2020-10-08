@@ -5,6 +5,7 @@ from math import radians, degrees
 def initCont():
     """Inits controller to use it and returns joystick class.
     `returns` `None` if controller is not connected"""
+    pygame.joystick.quit()
     pygame.init()
     pygame.joystick.init()
 
