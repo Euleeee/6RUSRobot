@@ -98,14 +98,14 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     pos[5] += dposcneg
     pos[5] -= dposcpos
 
-    pos = checkMaxVal(pos, 40, 40, 200, 40, 40, 30)  # this uses degrees
+    pos = checkMaxVal(pos, 40, 40, [-140, -60], 40, 40, 30)  # this uses degrees
 
     pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
     
     return pos
 
 
-def checkMaxVal(val,maxX,maxY,maxZ,maxA,maxB,maxC):
+def checkMaxVal(val,maxX,maxY,zBounds,maxA,maxB,maxC):
         # Maximale x-Richtung
     if val[0] > maxX:
         val[0] = maxX
@@ -119,10 +119,10 @@ def checkMaxVal(val,maxX,maxY,maxZ,maxA,maxB,maxC):
         val[1] = -maxY
 
         # Maximale z-Richtung
-    if val[2] > maxZ:
-        val[2] = maxZ
-    if val[2] < -maxZ:
-        val[2] = -maxZ
+    if val[2] > zBounds[1]:
+        val[2] = zBounds[1]
+    if val[2] < zBounds[0]:
+        val[2] = zBounds[0]
 
         # Maximale a-Richtung
     if val[3] > maxA:
