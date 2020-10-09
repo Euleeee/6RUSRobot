@@ -29,7 +29,7 @@ class sixRUS:
         
         # Robot-Dimensions [mm]  (Hardcoded but can be changed via a function)
         # [l1, l2, dx, dy, Dx, Dy]  (more Infos in documentation)
-        self.geometricParams = [57.0, 92.0, 11.0, 9.5, 70.0, 12.0]
+        self.geometricParams = [57.0, 92.0, 11.0, 9.5, 63.0, 12.0]
         
         ### Robot GPIO-pins:
         # Stepsize pins
@@ -132,9 +132,9 @@ class sixRUS:
 
         # determine direction from sign of vector-element
         directions = [0]*6  # saves in which directions the motors should turn
-        for i, direction in enumerate(directions):
-            if movVec[i] < 0: direction = 0               
-            else: direction = 1
+        for i, _ in enumerate(directions):
+            if movVec[i] < 0: directions[i] = 0
+            else: directions[i] = 1
     
         for i in range(maxSteps):  # loop with step for highest amount of steps
             
