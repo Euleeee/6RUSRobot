@@ -165,9 +165,9 @@ def main():
     global robotMode
     robotMode = 'demo'  # current mode (check documentation for all possible modes)
 
-    robo = sixRUS(stepperMode=1/32, stepDelay=0.002)
+    robo = sixRUS(stepperMode=1/32, stepDelay=0.002)  # init robot
 
-    robo.homing('90')
+    robo.homing('90')  # home robot
 
     init_global_joystick()
 
