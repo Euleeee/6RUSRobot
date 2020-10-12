@@ -17,9 +17,9 @@ class sixRUS:
 
         self.currPose = [0.0]*6  # current pose of the robot: [x, y, z, alpha, beta, gamma]
 
-        self.currSteps = [0]*6  # current motorangles as steps
+        self.currSteps = [0]*6  # current motorangles as steps #TODO: this varriable is not updated yet
 
-        # TODO: step variable to calculate the excact position
+        # TODO: step variable to calculate the exact position
 
         self.stepsPerRev = 0.0  # how many steps the motor takes for one revolution (Full Step) (set in __init__)
         self.stepperMode = 0.0  # microstep Mode (set in __init__)
@@ -28,7 +28,7 @@ class sixRUS:
         self.stepDelay = 0.0  # Delay between steps (calculated in __init__ function)
         
         # Robot-Dimensions [mm]  (Hardcoded but can be changed via a function)
-        # [l1, l2, dx, dy, Dx, Dy]  (more Infos in documentation)
+        # [l1, l2, dx, dy, Dx, Dy]  (more Infos in documentation) 
         self.geometricParams = [57.0, 92.0, 11.0, 9.5, 63.0, 12.0]
         
         ### Robot GPIO-pins:

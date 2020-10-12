@@ -99,7 +99,8 @@ def startListening2Cont():
     Timer(0.1, call_every_tenth_sec).start()
 
 def stopListening2Cont():
-    """stop listening to controller. Needed if a program is listening to the controller itself"""
+    """stop listening to controller. Needed if a program is listening to 
+    the controller itself or a new joystick gets initialised"""
     global shouldNotListen2Cont
     shouldNotListen2Cont.set()
 
@@ -115,44 +116,40 @@ def mov_with_controller(robot, dt=0.001):
         ans = con.listen2Cont(joystick, robot.currPose)
 
         if isinstance(ans, str):  # string was given as an answer
-
             eval_controller_response(ans)
             
             break  # break out of infinite loop
 
         else:  # pose was given as an answer
-            # print([round(n, 3) for n in ans])
-            robot.mov(ans)
+            robot.mov(ans)  # move robot (PTP)
 
 
 def move_with_demo(robot):
-    """Function to select a demo programm and execute it
-    """
+    """Selects a random demo programm and executes it"""
+
     modules = list_of_modules(demo)
-    Prog = random.choice(modules)  # choose a random demo 
-    demoPosList = Prog()  # execute chosen demo programm
-    prog = random.choice(modules)
-    demoPosList = prog()
+    prog = random.choice(modules)  # choose a random demo
+    demoPosList = prog()  # execute chosen demo programm
 
     global robotMode
 
     for pos in demoPosList:
         try:
             if pos[6] == 'lin':
-                coord = pos[:6]
-                robot.mov_lin(coord)
+                coord = pos[:6]  # extract only pose
+                robot.mov_lin(coord)  # move linear
             elif pos[6] == 'mov':
-                coord = pos[:6]
-                robot.mov(coord)
+                coord = pos[:6]  # extract only pose
+                robot.mov(coord)  # move with PTP-interplation
         except IndexError:
-            robot.mov(pos)
+            robot.mov(pos)  # if 'lin' or 'mov' wasent given, use mov/PTP
         
         if not robotMode == 'demo':  # break if the mode was changed
             break
         
 
 def list_of_modules(packageName):
-    """Function to find all modules in a package 
+    """Find all modules in a package 
     `packageName`: Name of package
     `return`: List of all modules in this package
     """
@@ -163,7 +160,7 @@ def list_of_modules(packageName):
 
     return modulList
 
-############## Main program ###################
+############## Main function ###################
 def main():
     global robotMode
     robotMode = 'demo'  # current mode (check documentation for all possible modes)
