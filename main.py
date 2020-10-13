@@ -5,7 +5,6 @@ import RPi.GPIO as GPIO
 import demo 
 import types
 import random
-import os
 
 from threading import Timer, Event
 
@@ -21,14 +20,12 @@ def call_every_5_sec():
     if not programStopped.is_set():  # only execute routine if program is not terminated
 
         # TODO. comment a bit more
-        print('Checking connection to controller:')
-        controllerStatus = os.system('ls /dev/input/js0')  # checking for controller with linux
-
+        connected = con.stillConnected()  # check if controller is connected
+        
         global shouldNotListen2Cont
         global alreadyConnected
         
-        if controllerStatus != 0:  # not connected
-            
+        if connected == False:  # not connected
             alreadyConnected = False
             print("Please connect controller! Retrying in 5 seconds...")
             

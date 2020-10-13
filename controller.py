@@ -1,5 +1,6 @@
 import pygame
 import time
+import os
 from math import radians, degrees
 
 def initCont():
@@ -18,14 +19,14 @@ def initCont():
     return joystick
 
 def stillConnected():
-    """Checks if a Controller is still connected.
+    """Checks if a Controller is still connected trough a linux command.
     `returns` boolean"""
 
-    pygame.joystick.quit()  # disconnect current controller (if available)
-    pygame.joystick.init()  # init controller again
+    print('Checking connection to controller:')
+    controllerStatus = os.system('ls /dev/input/js0')  # checking for controller with linux
 
-    # check if controller is present
-    if pygame.joystick.get_count() == 0:
+    if controllerStatus != 0:  # not connected
+        print("Please connect controller! Retrying in 5 seconds...")
         return False
     else:
         return True
