@@ -168,7 +168,8 @@ def calibrate_process(robot, dt=0.001):
     motNum = 0  # Motor numbers from 0 to 5
     while True:  # infinite loop
         time.sleep(dt)
-        ans, motNum = con.listen2Cont(joystick, robot.currPose, 'calibrate', motNum) 
+        # TODO!!!!!! Can also give back 'calibrate' or other string and raises Error
+        ans, motNum = con.listen2Cont(joystick, robot.currPose, contMode='calibrate', motNum=motNum) 
 
         if isinstance(ans, str):  # string was given as an answer
             eval_controller_response(ans)
