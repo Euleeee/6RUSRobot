@@ -5,7 +5,7 @@ from math import radians, degrees
 def initCont():
     """Inits controller to use it and returns joystick class.
     `returns` `None` if controller is not connected"""
-    pygame.joystick.quit()
+    pygame.joystick.quit()  #
     pygame.init()
     pygame.joystick.init()
 
@@ -48,8 +48,12 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     dposx, dposy, dposz = 0, 0, 0
     dposaneg, dposapos, dposbneg, dposbpos, dposcneg, dposcpos = 0, 0, 0, 0, 0, 0
 
-    pygame.event.get()  # get event
-    
+    # pygame.event.get()  # get event
+    # pygame.event.poll()  # get event
+    for event in pygame.event.get():
+        #print(event)
+        pass
+
     # 0Z----> y  
     # |
     # |
@@ -98,7 +102,7 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     pos[5] += dposcneg
     pos[5] -= dposcpos
 
-    pos = checkMaxVal(pos, 40, 40, [-140, -60], 40, 40, 30)  # this uses degrees
+    pos = checkMaxVal(pos, 40, 40, [-145, -50], 30, 30, 20)  # this uses degrees
 
     pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
     

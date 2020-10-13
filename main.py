@@ -75,6 +75,7 @@ def eval_controller_response(response):
         if response == 'stop':
             pass
         elif response == 'homing':
+            stopListening2Cont()
             pass
         elif response == 'demo':
             pass
@@ -207,9 +208,10 @@ if __name__ == '__main__':
 
     try:
         main()
-    except:  # shutdown python program gently
+    except KeyboardInterrupt:  # shutdown python program gently
+        print('Stopped with KeyboardInterrupt!')
+    finally:
         GPIO.cleanup()  # cleanup GPIOs (to avoid warning on next startup)
         programStopped.set()  # set event for stopping threading
-
         # Exiting message
         print("\n6-RUS program was terminated due to user-input or an error (Please wait ca. 5s) \nPlease start the program again to control the robot again!")

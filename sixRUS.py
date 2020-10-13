@@ -29,7 +29,8 @@ class sixRUS:
         
         # Robot-Dimensions [mm]  (Hardcoded but can be changed via a function)
         # [l1, l2, dx, dy, Dx, Dy]  (more Infos in documentation) 
-        self.geometricParams = [57.0, 92.0, 11.0, 9.5, 63.0, 12.0]
+        # self.geometricParams = [57.0, 92.0, 11.0, 9.5, 63.0, 12.0]  # small endeffector
+        self.geometricParams = [57.0, 92.0, 29.5, 12.5, 63.0, 12.0]  # big endeffector
         
         ### Robot GPIO-pins:
         # Stepsize pins
@@ -125,8 +126,6 @@ class sixRUS:
 
         maxSteps = int(max(abs(movVec)))  # maximum steps to move
         stepAfterInc = maxSteps / (abs(movVec) + 1)  # after which increments to take one step
-
-        thisDirection = 1  # preinitialisation of current turning direction
 
         stepMotors = [0]*6  # saves which motor to tun on each step (1 -> turn; 0 -> do not turn)
 
@@ -342,7 +341,7 @@ class sixRUS:
             return difference
         
         # initial guess/startingvalue
-        x_0 = [0.0, 0.0, -100.0, 0.0, 0.0, 0.0]
+        x_0 = [0.0, 0.0, -130.0, 0.0, 0.0, 0.0]
 
         curr_pose = fsolve(func, x_0)  # solve numerically with initial guess
 
@@ -368,11 +367,13 @@ if __name__ == '__main__':  # Example Code if this file gets executed directly
     import time  # import time for delays
 
     robo = sixRUS(stepperMode=1/32,stepDelay=0.001)  # initialise robot 
-    robo.homing('90')  # homing of robot with method ‘90’ 
+    robo.homing('90')  # homing of robot with method ‘90’
+
+    print('Homingpose: ', robo.currPose)
 
     # define two poses
-    pose1 = [0,0,-90,0,0,0]
-    pose2 = [0,0,-127,0,0,0]
+    pose1 = [0, 0, -90, 0, 0, 0]
+    pose2 = [0, 0, -127, 0, 0, 0]
 
     robo.mov(pose1)  # move to first pose (PTP) 
     time.sleep(.5)  # wait 0.5 seconds
