@@ -31,7 +31,7 @@ def stillConnected():
         return True
 
 
-def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
+def listen2Cont(joystick, currPose=[0,0,0,0,0,0], contMode = '', currMotorNum = 0):
     """listens to controller once and returns pose
     `joystick`: Joystick class (given in init function)
     `currPose`: current pose of the robot
@@ -49,21 +49,6 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     dposaneg, dposapos, dposbneg, dposbpos, dposcneg, dposcpos = 0, 0, 0, 0, 0, 0
 
     pygame.event.get()  # get event
-    
-    # 0Z----> y  
-    # |
-    # |
-    # \/ x
-
-    dposx = joystick.get_axis(1)        # x-Achse(Linker Joystick unten-> positiv, oben -> negativ)
-    dposy = joystick.get_axis(0)        # y-Achse(Linker Joystick rechts -> positiv, links -> negativ)
-    dposz = joystick.get_axis(4) *-1    # z-Achse(Rechter Joystick oben -> positiv, unten -> negativ)
-    dposaneg = joystick.get_button(15)
-    dposapos = joystick.get_button(16)
-    dposbneg = joystick.get_button(14)
-    dposbpos = joystick.get_button(13)
-    dposcneg = joystick.get_button(4)
-    dposcpos = joystick.get_button(5)
 
     # Buttons on the right side
     xBut = joystick.get_button(0)  # x-Button
@@ -74,7 +59,7 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     # START ans SELECT
     startBut = joystick.get_button(9)  # start
     selectBut = joystick.get_button(8)  # select
-    
+        
     # modes and returning of the mode as string
     if oBut == 1 and xBut == 0 and triangBut == 0 and squareBut == 0:
         return 'stop'
@@ -84,25 +69,64 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
         return 'demo'
     elif startBut == 1 and selectBut == 0:  # change to manual control with controller
         return 'manual'
+    elif xBut == 1 and triangBut == 1 and squareBut == 0 and oBut == 1:  # calibrate
+        return 'calibrate' 
 
-    pygame.event.clear()  # clear events in queue (only one event needed)
+    if contMode == 'calibration':
 
-    # add increments to values
-    pos[0] += dposx
-    pos[1] += dposy
-    pos[2] += dposz
-    pos[3] += dposaneg
-    pos[3] -= dposapos
-    pos[4] += dposbneg
-    pos[4] -= dposbpos
-    pos[5] += dposcneg
-    pos[5] -= dposcpos
+        caliMot = [0,0,0,0,0,0]
+        if joystick.get_button(4):
+            currMotorNum -= 1
+        elif joystick.get_button(5):
+            currMotorNum += 1
 
-    pos = checkMaxVal(pos, 40, 40, [-140, -60], 40, 40, 30)  # this uses degrees
+        if currMotorNum > 5:
+            currMotorNum = 0
+        elif currMotorNum < 0:
+            currMotorNum = 5    
 
-    pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
+        if joystick.get_button(13):
+            caliMot[currMotorNum] = 1
+        elif joystick.get_button(14):
+            caliMot[currMotorNum] = -1
+        else:
+            caliMot = [0,0,0,0,0,0]
+        
+        pygame.event.clear()  # clear events in queue (only one event needed)
+
+        return caliMot, currMotorNum
+
+    else:
+        
+        dposx = joystick.get_axis(1)        # x-Achse(Linker Joystick unten-> positiv, oben -> negativ)         0Z---> y
+        dposy = joystick.get_axis(0)        # y-Achse(Linker Joystick rechts -> positiv, links -> negativ)      |
+        dposz = joystick.get_axis(4) *-1    # z-Achse(Rechter Joystick oben -> positiv, unten -> negativ)       \/ x 
+        dposaneg = joystick.get_button(15)
+        dposapos = joystick.get_button(16)
+        dposbneg = joystick.get_button(14)
+        dposbpos = joystick.get_button(13)
+        dposcneg = joystick.get_button(4)
+        dposcpos = joystick.get_button(5)
+
+        pygame.event.clear()  # clear events in queue (only one event needed)
+
+        # add increments to values
+        pos[0] += dposx
+        pos[1] += dposy
+        pos[2] += dposz
+        pos[3] += dposaneg
+        pos[3] -= dposapos
+        pos[4] += dposbneg
+        pos[4] -= dposbpos
+        pos[5] += dposcneg
+        pos[5] -= dposcpos
+
+        pos = checkMaxVal(pos, 40, 40, [-140, -60], 40, 40, 30)  # this uses degrees
+
+        pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
+        
+        return pos
     
-    return pos
 
 
 def checkMaxVal(val,maxX,maxY,zBounds,maxA,maxB,maxC):

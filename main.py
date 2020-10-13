@@ -80,6 +80,8 @@ def eval_controller_response(response):
             pass
         elif response == 'manual':
             pass
+        elif response == 'calibrate' :
+            pass
         else:
             raise Exception("Unknown answer from controller")
         
@@ -160,6 +162,24 @@ def list_of_modules(packageName):
 
     return modulList
 
+def calibrate_process(robot, dt=0.001):
+    """""" # TODO: enter discription
+
+    ans = ''
+    global joystick
+    motNum = 0 #0-5
+    while True:  # infinite loop
+        time.sleep(dt)
+        ans, motNum = con.listen2Cont(joystick, robot.currPose, 'calibrate', motNum)
+
+        if isinstance(ans, str):  # string was given as an answer
+            eval_controller_response(ans)
+            
+            break  # break out of infinite loop
+
+        else:  # pose was given as an answer
+            robot.mov_steps(ans)  # move robot (PTP)
+
 ############## Main function ###################
 def main():
     global robotMode
@@ -200,6 +220,13 @@ def main():
                     print("Stopped robot!")
                     firstTime = False
                 time.sleep(0.0001)  # limit loop time
+
+        while robotMode == 'calibrate':
+            stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
+            calibrate_process(robo)
+            startListening2Cont()  # let the program listen to the controller periodically again
+            robotMode('stop')
+
 
 
 # Main program if this file get executed
