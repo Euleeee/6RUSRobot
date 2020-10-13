@@ -35,6 +35,8 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0], contMode = '', currMotorNum = 
     """listens to controller once and returns pose
     `joystick`: Joystick class (given in init function)
     `currPose`: current pose of the robot
+    `contMode`: Controller Mode -> for calibration set contMode = 'calibration', else do nothing
+    `cuuMotorNum`: Number between 0 and 5, is the current motor the calibrate
     `return`: pose-list with altered values (if return is a string it is a code or an error)
     """
     if joystick is None:  # if no controller was given
@@ -75,20 +77,20 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0], contMode = '', currMotorNum = 
     if contMode == 'calibration':
 
         caliMot = [0,0,0,0,0,0]
-        if joystick.get_button(4):
-            currMotorNum -= 1
-        elif joystick.get_button(5):
-            currMotorNum += 1
+        if joystick.get_button(4):  # check if L1 was pressed
+            currMotorNum -= 1  # select motor for calibration 
+        elif joystick.get_button(5):  # check if R1 was pressed
+            currMotorNum += 1  # select motor for calibration 
 
-        if currMotorNum > 5:
+        if currMotorNum > 5: # check if selected motor number exists
             currMotorNum = 0
-        elif currMotorNum < 0:
+        elif currMotorNum < 0: 
             currMotorNum = 5    
 
-        if joystick.get_button(13):
-            caliMot[currMotorNum] = 1
-        elif joystick.get_button(14):
-            caliMot[currMotorNum] = -1
+        if joystick.get_button(13): 
+            caliMot[currMotorNum] = 1  # set 1 posivitve for selected motor
+        elif joystick.get_button(14): 
+            caliMot[currMotorNum] = -1  # set -1 posivitve for selected motor
         else:
             caliMot = [0,0,0,0,0,0]
         

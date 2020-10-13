@@ -167,10 +167,10 @@ def calibrate_process(robot, dt=0.001):
 
     ans = ''
     global joystick
-    motNum = 0 #0-5
+    motNum = 0  # Motor numbers from 0 to 5
     while True:  # infinite loop
         time.sleep(dt)
-        ans, motNum = con.listen2Cont(joystick, robot.currPose, 'calibrate', motNum)
+        ans, motNum = con.listen2Cont(joystick, robot.currPose, 'calibrate', motNum) 
 
         if isinstance(ans, str):  # string was given as an answer
             eval_controller_response(ans)
@@ -223,7 +223,7 @@ def main():
 
         while robotMode == 'calibrate':
             stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
-            calibrate_process(robo)
+            calibrate_process(robo)  
             startListening2Cont()  # let the program listen to the controller periodically again
             robotMode('stop')
 
