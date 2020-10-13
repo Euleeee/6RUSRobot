@@ -31,10 +31,12 @@ def stillConnected():
         return True
 
 
-def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
+def listen2Cont(joystick, currPose=[0,0,0,0,0,0], contMode = '', currMotorNum = 0):
     """listens to controller once and returns pose
     `joystick`: Joystick class (given in init function)
     `currPose`: current pose of the robot
+    `contMode`: Controller Mode -> for calibration set contMode = 'calibration', else do nothing
+    `cuuMotorNum`: Number between 0 and 5, is the current motor the calibrate
     `return`: pose-list with altered values (if return is a string it is a code or an error)
     """
     if joystick is None:  # if no controller was given
@@ -48,26 +50,7 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     dposx, dposy, dposz = 0, 0, 0
     dposaneg, dposapos, dposbneg, dposbpos, dposcneg, dposcpos = 0, 0, 0, 0, 0, 0
 
-    # pygame.event.get()  # get event
-    # pygame.event.poll()  # get event
-    for event in pygame.event.get():
-        #print(event)
-        pass
-
-    # 0Z----> y  
-    # |
-    # |
-    # \/ x
-
-    dposx = joystick.get_axis(1)        # x-Achse(Linker Joystick unten-> positiv, oben -> negativ)
-    dposy = joystick.get_axis(0)        # y-Achse(Linker Joystick rechts -> positiv, links -> negativ)
-    dposz = joystick.get_axis(4) *-1    # z-Achse(Rechter Joystick oben -> positiv, unten -> negativ)
-    dposaneg = joystick.get_button(15)
-    dposapos = joystick.get_button(16)
-    dposbneg = joystick.get_button(14)
-    dposbpos = joystick.get_button(13)
-    dposcneg = joystick.get_button(4)
-    dposcpos = joystick.get_button(5)
+    pygame.event.get()  # get event
 
     # Buttons on the right side
     xBut = joystick.get_button(0)  # x-Button
@@ -78,7 +61,7 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
     # START ans SELECT
     startBut = joystick.get_button(9)  # start
     selectBut = joystick.get_button(8)  # select
-    
+        
     # modes and returning of the mode as string
     if oBut == 1 and xBut == 0 and triangBut == 0 and squareBut == 0:
         return 'stop'
@@ -88,25 +71,64 @@ def listen2Cont(joystick, currPose=[0,0,0,0,0,0]):
         return 'demo'
     elif startBut == 1 and selectBut == 0:  # change to manual control with controller
         return 'manual'
+    elif xBut == 1 and triangBut == 1 and squareBut == 0 and oBut == 1:  # calibrate
+        return 'calibrate' 
 
-    pygame.event.clear()  # clear events in queue (only one event needed)
+    if contMode == 'calibration':
 
-    # add increments to values
-    pos[0] += dposx
-    pos[1] += dposy
-    pos[2] += dposz
-    pos[3] += dposaneg
-    pos[3] -= dposapos
-    pos[4] += dposbneg
-    pos[4] -= dposbpos
-    pos[5] += dposcneg
-    pos[5] -= dposcpos
+        caliMot = [0,0,0,0,0,0]
+        if joystick.get_button(4):  # check if L1 was pressed
+            currMotorNum -= 1  # select motor for calibration 
+        elif joystick.get_button(5):  # check if R1 was pressed
+            currMotorNum += 1  # select motor for calibration 
 
-    pos = checkMaxVal(pos, 40, 40, [-145, -50], 30, 30, 20)  # this uses degrees
+        if currMotorNum > 5: # check if selected motor number exists
+            currMotorNum = 0
+        elif currMotorNum < 0: 
+            currMotorNum = 5    
 
-    pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
+        if joystick.get_button(13): 
+            caliMot[currMotorNum] = 1  # set 1 posivitve for selected motor
+        elif joystick.get_button(14): 
+            caliMot[currMotorNum] = -1  # set -1 posivitve for selected motor
+        else:
+            caliMot = [0,0,0,0,0,0]
+        
+        pygame.event.clear()  # clear events in queue (only one event needed)
+
+        return caliMot, currMotorNum
+
+    else:
+        
+        dposx = joystick.get_axis(1)        # x-Achse(Linker Joystick unten-> positiv, oben -> negativ)         0Z---> y
+        dposy = joystick.get_axis(0)        # y-Achse(Linker Joystick rechts -> positiv, links -> negativ)      |
+        dposz = joystick.get_axis(4) *-1    # z-Achse(Rechter Joystick oben -> positiv, unten -> negativ)       \/ x 
+        dposaneg = joystick.get_button(15)
+        dposapos = joystick.get_button(16)
+        dposbneg = joystick.get_button(14)
+        dposbpos = joystick.get_button(13)
+        dposcneg = joystick.get_button(4)
+        dposcpos = joystick.get_button(5)
+
+        pygame.event.clear()  # clear events in queue (only one event needed)
+
+        # add increments to values
+        pos[0] += dposx
+        pos[1] += dposy
+        pos[2] += dposz
+        pos[3] += dposaneg
+        pos[3] -= dposapos
+        pos[4] += dposbneg
+        pos[4] -= dposbpos
+        pos[5] += dposcneg
+        pos[5] -= dposcpos
+
+        pos = checkMaxVal(pos, 40, 40, [-140, -60], 40, 40, 30)  # this uses degrees
+
+        pos = [pos[0], pos[1], pos[2], radians(pos[3]), radians(pos[4]), radians(pos[5])]  # convert to RAD
+        
+        return pos
     
-    return pos
 
 
 def checkMaxVal(val,maxX,maxY,zBounds,maxA,maxB,maxC):
