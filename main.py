@@ -50,9 +50,10 @@ def call_every_tenth_sec():
         return
 
     global joystick
-    ans = con.listen2Cont(joystick)
+    controls = con.get_controller_inputs(joystick)
 
-    eval_controller_response(ans)  # evaluate the answer from controller
+    # evaluate the answer from controller
+    eval_controller_response(con.mode_from_inputs(controls))
 
     Timer(0.1, call_every_tenth_sec).start()
 
@@ -65,7 +66,7 @@ def init_global_joystick():
 
 
 def eval_controller_response(response):
-    """evaluates the answer from the listen2Cont-function"""
+    """evaluates the answer from the listen2Cont-function""" #TODO: correct description
     if isinstance(response, str):
         # controller gave an answer
 
@@ -119,11 +120,9 @@ def mov_with_controller(robot, dt=0.001):
         newPose = con.get_movement_from_cont(inputs, robot.currPose)  # calc new pose
 
         quit = eval_controller_response(con.mode_from_inputs(inputs))  # check if mode was changed
-        if quit is True:
-            break
+        if quit is True: break
 
         robot.mov(newPose)
-
 
 
 def move_with_demo(robot):
@@ -162,24 +161,44 @@ def list_of_modules(packageName):
 
     return modulList
 
-def calibrate_process(robot, dt=0.001):
+def calibrate_process(robot, dt=0.005):
     """""" # TODO: enter discription
 
-    ans = ''
     global joystick
-    motNum = 0  # Motor numbers from 0 to 5
-    while True:  # infinite loop
+    motNum = 0  # motornumber from 0 to 5
+    # pose after calibration has to be given to move the motors but is not necessary here 
+    # since a homing procedure has to be done afterwards anyways
+    poseAfterCali = [0, 0, 0, 0, 0, 0]
+    allowedToChangeAgain = True  # if the next motor can be selected
+
+    while True:
         time.sleep(dt)
-        # TODO!!!!!! Can also give back 'calibrate' or other string and raises Error
-        ans, motNum = con.listen2Cont(joystick, robot.currPose, contMode='calibrate', motNum=motNum) 
+        controls = con.get_controller_inputs(joystick)
 
-        if isinstance(ans, str):  # string was given as an answer
-            eval_controller_response(ans)
-            
-            break  # break out of infinite loop
+        caliMot = [0, 0, 0, 0, 0, 0]
 
-        else:  # pose was given as an answer
-            robot.mov_steps(ans)  # move robot (PTP)
+        if allowedToChangeAgain:
+            # change motornumber with L1 and R1
+            if   controls['L1']: motNum -= 1
+            elif controls['R1']: motNum += 1
+
+            # check if selected motor number exists
+            if   motNum > 5: motNum = 0
+            elif motNum < 0: motNum = 5
+            allowedToChangeAgain = False
+        
+        if controls['L1'] == 0 and controls['R1'] == 0:  # both buttons have to be released to switch to next motor
+            allowedToChangeAgain = True
+
+        if controls['UP']:
+            caliMot[motNum] = 1  # set 1 posivitve for selected motor
+        elif controls['DOWN']:
+            caliMot[motNum] = -1  # set -1 posivitve for selected motor
+
+        robot.mov_steps(caliMot, poseAfterCali) 
+
+        quit = eval_controller_response(con.mode_from_inputs(controls))  # check if mode was changed
+        if quit is True: break
 
 ############## Main function ###################
 def main():
@@ -224,10 +243,11 @@ def main():
 
         while robotMode == 'calibrate':
             stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
-            calibrate_process(robo)  
+            time.sleep(0.5)
+            calibrate_process(robo)
+            time.sleep(0.5)
             startListening2Cont()  # let the program listen to the controller periodically again
-            robotMode = 'stop'
-
+            robotMode = 'homing'
 
 
 # Main program if this file get executed
