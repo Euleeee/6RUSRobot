@@ -87,12 +87,11 @@ def eval_controller_response(response):
         
         if robotMode != response:  # only print if the mode changes
             print('Switching to:', response)
+            robotMode = response  # set robot mode to the response
+            return True
 
-        robotMode = response  # set robot mode to the response
-    else:
-        # controller has given a pose
-        pass
-        
+    return False  # no response given
+  
 
 def startListening2Cont():
     """start listening to controller every 0.1 s"""
@@ -108,22 +107,23 @@ def stopListening2Cont():
 
 
 def mov_with_controller(robot, dt=0.001):
-    """""" # TODO: enter discription
+    """This is the manual controlling mode, where the robot can be driven with the controller.
+    Exits only if the mode was changed or the program was interrupted"""
 
-    ans = ''
     global joystick
 
     while True:  # infinite loop
         time.sleep(dt)
-        ans = con.listen2Cont(joystick, robot.currPose)
 
-        if isinstance(ans, str):  # string was given as an answer
-            eval_controller_response(ans)
-            
-            break  # break out of infinite loop
+        inputs = con.get_controller_inputs(joystick)
+        newPose = con.get_movement_from_cont(inputs, robot.currPose)  # calc new pose
 
-        else:  # pose was given as an answer
-            robot.mov(ans)  # move robot (PTP)
+        quit = eval_controller_response(con.mode_from_inputs(inputs))  # check if mode was changed
+        if quit is True:
+            break
+
+        robot.mov(newPose)
+
 
 
 def move_with_demo(robot):
