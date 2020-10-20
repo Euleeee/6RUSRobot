@@ -59,7 +59,7 @@ def get_movement_from_cont(controls, currentPose):
     pose[5] -= controls['R1']    * rotFac
 
     # move pose within workingspace if its outside
-    pose = checkMaxVal(pose, 40, 40, [-140, -60], 40, 40, 30)  # this uses degrees
+    pose = checkMaxVal(pose, 40, 40, [-150, -60], 40, 40, 30)  # this uses degrees
 
     pose = [pose[0], pose[1], pose[2], radians(pose[3]), radians(pose[4]), radians(pose[5])]  # convert to RAD
 

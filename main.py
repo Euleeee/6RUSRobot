@@ -247,7 +247,7 @@ def main():
             calibrate_process(robo)
             time.sleep(0.5)
             startListening2Cont()  # let the program listen to the controller periodically again
-            robotMode = 'homing'
+            robotMode = 'homing'  # TODO. exiting does notexit cleanly
 
 
 # Main program if this file get executed
