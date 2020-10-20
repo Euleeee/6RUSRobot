@@ -17,42 +17,44 @@ alreadyConnected = False  # check if contoller reconnected
 
 def call_every_5_sec():
     """execute everything in here every 5 seconds after"""
-    if not programStopped.is_set():  # only execute routine if program is not terminated
+    if programStopped.is_set():  # only execute routine if program is not terminated
+        return
 
-        # TODO. comment a bit more
-        connected = con.stillConnected()  # check if controller is connected
+    # TODO. comment a bit more
+    connected = con.stillConnected()  # check if controller is connected
+    
+    global shouldNotListen2Cont
+    global alreadyConnected
+    
+    if connected == False:  # not connected
+        alreadyConnected = False
+        print("Please connect controller! Retrying in 5 seconds...")
         
-        global shouldNotListen2Cont
-        global alreadyConnected
-        
-        if connected == False:  # not connected
-            alreadyConnected = False
-            print("Please connect controller! Retrying in 5 seconds...")
-            
-        else:  # connected
+    else:  # connected
 
-            if alreadyConnected:  # controller is still connected
-                print('Controller still connected.')
-                # no new initialisation required here
-            else:
-                stopListening2Cont()  # stop listening as the controller gets initalised 
-                init_global_joystick()  # init new joystick since the controller was reconnected or connected the first time
-                startListening2Cont()
-                alreadyConnected = True
-                print('Controller connected.')
+        if alreadyConnected:  # controller is still connected
+            print('Controller still connected.')
+            # no new initialisation required here
+        else:
+            stopListening2Cont()  # stop listening as the controller gets initalised 
+            init_global_joystick()  # init new joystick since the controller was reconnected or connected the first time
+            startListening2Cont()
+            alreadyConnected = True
+            print('Controller connected.')
 
-        Timer(5.0, call_every_5_sec).start()
+    Timer(5.0, call_every_5_sec).start()
 
 def call_every_tenth_sec():
     # TODO: add discription
-    if not programStopped.is_set() and not shouldNotListen2Cont.is_set():  # only execute routine if program is not terminated
+    if programStopped.is_set() or shouldNotListen2Cont.is_set():  # only execute routine if program is not terminated
+        return
 
-        global joystick
-        ans = con.listen2Cont(joystick)
+    global joystick
+    ans = con.listen2Cont(joystick)
 
-        eval_controller_response(ans)  # evaluate the answer from controller
+    eval_controller_response(ans)  # evaluate the answer from controller
 
-        Timer(0.1, call_every_tenth_sec).start()
+    Timer(0.1, call_every_tenth_sec).start()
 
 def init_global_joystick():
     # TODO: discription
@@ -224,7 +226,7 @@ def main():
             stopListening2Cont()  # stop listening to controller (bc. we listen all the time in here)
             calibrate_process(robo)  
             startListening2Cont()  # let the program listen to the controller periodically again
-            robotMode('stop')
+            robotMode = 'stop'
 
 
 
