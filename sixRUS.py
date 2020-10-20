@@ -162,7 +162,6 @@ class sixRUS:
     def mov(self, pose:list):
         """Move to new position/pose with Point-to-Point (PTP) interpolation.
         This is a synchronous PTP implementation"""
-
         
         newAngles = self.inv_kinematic(pose)  # get new angles
         newSteps = self.angles2steps(newAngles)  # calculate steps of new position
