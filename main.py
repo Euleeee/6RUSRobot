@@ -218,7 +218,7 @@ def main():
 
     startListening2Cont()  # start listening to controller
     
-        
+    
     while True:  # infinite loop only breaks on Keyboard-Interrupt
         while robotMode == 'demo':
             move_with_demo(robo)
