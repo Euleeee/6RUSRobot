@@ -20,7 +20,6 @@ def call_every_5_sec():
     if programStopped.is_set():  # only execute routine if program is not terminated
         return
 
-    # TODO. comment a bit more
     connected = con.stillConnected()  # check if controller is connected
     
     global shouldNotListen2Cont
