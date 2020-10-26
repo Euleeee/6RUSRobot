@@ -20,9 +20,9 @@ def call_every_5_sec():
     if programStopped.is_set():  # only execute routine if program is not terminated
         return
 
+    #### Check if the controller is connected ####
     connected = con.stillConnected()  # check if controller is connected
     
-    global shouldNotListen2Cont
     global alreadyConnected
     
     if connected == False:  # not connected
@@ -41,10 +41,10 @@ def call_every_5_sec():
             alreadyConnected = True
             print('Controller connected.')
 
-    Timer(5.0, call_every_5_sec).start()
+    Timer(5.0, call_every_5_sec).start()  # call program again after 5 seconds
 
 def call_every_tenth_sec():
-    # TODO: add discription
+    """call every 0.1 seconds"""
     if programStopped.is_set() or shouldNotListen2Cont.is_set():  # only execute routine if program is not terminated
         return
 
@@ -54,10 +54,10 @@ def call_every_tenth_sec():
     # evaluate the answer from controller
     eval_controller_response(con.mode_from_inputs(controls))
 
-    Timer(0.1, call_every_tenth_sec).start()
+    Timer(0.1, call_every_tenth_sec).start()  # call program again after 0.1 seconds
 
 def init_global_joystick():
-    # TODO: discription
+    """initalizes the controller as a global joystick varriable"""
 
     global joystick
     joystick = con.initCont()
@@ -65,7 +65,7 @@ def init_global_joystick():
 
 
 def eval_controller_response(response):
-    """evaluates the answer from the listen2Cont-function""" #TODO: correct description
+    """evaluates the answer from the mode_from_input-function"""
     if isinstance(response, str):
         # controller gave an answer
 
@@ -161,7 +161,11 @@ def list_of_modules(packageName):
     return modulList
 
 def calibrate_process(robot, dt=0.005):
-    """""" # TODO: enter discription
+    """enters mode, where the user can calibrate each motor in microstep mode.
+    A homing procedure has to be done afterwarts!
+    
+    `dt`: how fast the controller inputs get checked in [s]
+    """
 
     global joystick
     motNum = 0  # motornumber from 0 to 5
@@ -210,13 +214,14 @@ def main():
 
     init_global_joystick()
 
-    call_every_5_sec()  # call subroutine every n-seconds TODO: manage thread
+    call_every_5_sec()  # call subroutine every 5-seconds to check for controller
+
     startListening2Cont()  # start listening to controller
     
         
     while True:  # infinite loop only breaks on Keyboard-Interrupt
         # time.sleep(0.5)
-        while robotMode == 'demo':  # TODO
+        while robotMode == 'demo':
             move_with_demo(robo)
             time.sleep(2)  # wait and then execute the next function
             
@@ -246,7 +251,7 @@ def main():
             calibrate_process(robo)
             time.sleep(0.5)
             startListening2Cont()  # let the program listen to the controller periodically again
-            robotMode = 'homing'  # TODO. exiting does notexit cleanly
+            robotMode = 'homing'  # home robot afterwards
 
 
 # Main program if this file get executed

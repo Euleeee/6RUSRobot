@@ -104,7 +104,7 @@ def get_controller_inputs(joystick):
     return input
 
 def mode_from_inputs(inputs):
-
+    """returns the selected mode from the controller inputs as a str. Returns `None` if no mode was choosen"""
     # Buttons on the right side
     xBut = inputs['xBut']
     oBut = inputs['oBut']
@@ -115,16 +115,22 @@ def mode_from_inputs(inputs):
     startBut = inputs['START']
     selectBut = inputs['SELECT']
 
+    # R2 and L2
+    R2But = inputs['R2']
+    L2But = inputs['L2']
+
+    R2andL2 = R2But and L2But
+
     # modes and returning of the mode as string
     if oBut == 1 and xBut == 0 and triangBut == 0 and squareBut == 0:
         return 'stop'
-    elif xBut == 1 and triangBut == 1 and squareBut == 1 and oBut == 0:  # do homing procedure
+    elif xBut == 1 and triangBut == 0 and squareBut == 0 and oBut == 0 and R2andL2:  # do homing procedure
         return 'homing'
     elif startBut == 0 and selectBut == 1:  # start demo program
         return 'demo'
     elif startBut == 1 and selectBut == 0:  # change to manual control with controller
         return 'manual'
-    elif xBut == 1 and triangBut == 1 and squareBut == 0 and oBut == 1:  # calibrate motors
+    elif xBut == 0 and triangBut == 1 and squareBut == 0 and oBut == 0 and R2andL2:  # calibrate motors
         return 'calibrate' 
 
     return None
