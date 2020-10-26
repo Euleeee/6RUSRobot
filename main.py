@@ -220,7 +220,6 @@ def main():
     
         
     while True:  # infinite loop only breaks on Keyboard-Interrupt
-        # time.sleep(0.5)
         while robotMode == 'demo':
             move_with_demo(robo)
             time.sleep(2)  # wait and then execute the next function
