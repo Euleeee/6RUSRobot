@@ -26,7 +26,6 @@ def stillConnected():
     controllerStatus = os.system('ls /dev/input/js0')  # checking for controller with linux
 
     if controllerStatus != 0:  # not connected
-        print("Please connect controller! Retrying in 5 seconds...")
         return False
     else:
         return True
