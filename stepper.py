@@ -8,7 +8,7 @@ def doSteps(stepPin:int, dirPin:int, direction=1, nrOfSteps:int=1, delay:float=0
     `dirPin`: int  Direction GPIO Pin
 
     optional:
-    `direction`:numeric direction > 0 >> positive, direction <= 0 >> negative
+    `direction`:numeric direction > 0 -> positive, direction <= 0 -> negative
     `nrOfSteps`: int  number of steps to turn  
     `delay`: float  delay between steps in [s]
     """
