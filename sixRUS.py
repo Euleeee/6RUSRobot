@@ -272,7 +272,6 @@ class sixRUS:
         
         `return`: list with all six motor-angles"""
 
-        # TODO: clean up this function
         # convert all inputs to floats to be able to work with complex numbers
         x = float(pose[0])
         y = float(pose[1])
@@ -321,7 +320,7 @@ class sixRUS:
     def for_kinematic(self, angles):
         """Forward kinematics of 6-RUS robot. This is done with a numeric solve (fsolve)
 
-        `angles`: list of angles in the form of [θ1, θ2, θ3 θ4, θ5, θ6]
+        `angles`: list of angles in the form of [θ1, θ2, θ3, θ4, θ5, θ6]
 
         `return`: list with pose in the form of [x, y, z, α, β, γ]"""
         
@@ -345,12 +344,6 @@ class sixRUS:
         curr_pose = fsolve(func, x_0)  # solve numerically with initial guess
 
         return list(curr_pose)
-
-    # OTHER
-    def demo(self):
-        """Moves the robot for demo and testing purposes"""
-        # TODO
-        pass
 
     def change_robot_dimensions(self, l1, l2, dx, dy, Dx, Dy):
         """This changes the dimensions of the robot which are important for the kinematics.

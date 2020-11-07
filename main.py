@@ -66,9 +66,8 @@ def init_global_joystick():
 
 def eval_controller_response(response):
     """evaluates the answer from the mode_from_input-function"""
-    if isinstance(response, str):
-        # controller gave an answer
 
+    if isinstance(response, str):
         global robotMode
 
         if response == 'stop':
@@ -203,7 +202,7 @@ def calibrate_process(robot, dt=0.005):
         quit = eval_controller_response(con.mode_from_inputs(controls))  # check if mode was changed
         if quit is True: break
 
-############## Main function ###################
+############## main function ###################
 def main():
     global robotMode
     robotMode = 'demo'  # current mode (check documentation for all possible modes)
@@ -253,7 +252,7 @@ def main():
             robotMode = 'homing'  # home robot afterwards
 
 
-# Main program if this file get executed
+# main program if this file get executed
 if __name__ == '__main__':
 
     try:
