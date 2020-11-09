@@ -213,7 +213,7 @@ class sixRUS:
                 print('Given velocity is lower than 0 or 0! Using default!')
 
 
-        poses = slerp_pose(self.currPose, pose, nrOfSteps)  # calculate poses in between
+        poses = slerp_pose(self.currPose, pose, nrOfSteps + 1)  # calculate poses in between
 
         # initialization of variables needed in the loop
         t_curr = 0
