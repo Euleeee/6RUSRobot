@@ -89,5 +89,9 @@ if __name__ == '__main__':
 
     ans = slerp_pose(p1, p2, n)
 
+    print('Slerp-Poses:')
     print(ans)
+
+    angle =angle_to_turn(p1, p2)
+    print('Angle: ', angle)
 
