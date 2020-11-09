@@ -204,7 +204,7 @@ class sixRUS:
         if nrOfSteps <= 0: return  # return if poses are already identical
 
         # check if velocity was given
-        if vel != None:
+        if vel is not None:
             if vel > 0:
                 # Calculate the timing for velocity management  
                 t_ges = (distance/10) / vel  # calculate duration of whole movement
