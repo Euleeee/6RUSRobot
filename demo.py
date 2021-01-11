@@ -74,7 +74,7 @@ def triangle(halfSideLength=30, robotHeight=-100, n=2):
     return posTriangle
 
 
-def circle(radius=35, resolution=30, robotHeight=-100, n=2, dir=0):
+def circle(radius=30, resolution=30, robotHeight=-100, n=2, dir=0):
     """Calculates coordinates for a 2D-circle
         `radius`: Radius of the circle
         `resolution`: Number of circlepoints
@@ -157,7 +157,7 @@ def pyramide(halfSideLength=30, robotHeight=-110):
     return pyramidePos
 
 
-def pickPlace(distx=15, disty=15, midDist=25, defaultHeight=-80, linHeight=20, robotHeight=-110):
+def pickPlace(distx=15, disty=15, midDist=20, defaultHeight=-80, linHeight=20, robotHeight=-110):
     """Calculates coordinates for a 3x2 palette
         `distx`: Distance between the palette places in x direction
         `disty`: Distance between the palette places in y direction
@@ -227,7 +227,7 @@ def rectangleSignal(flankHeight=50, flankWidth=15, robotHeight=-100):
     return rectanglePos
 
 
-def cylinder(downCirc=-120, upCirc=-80, radius=30, resolution=30):
+def cylinder(downCirc=-120, upCirc=-80, radius=25, resolution=30):
     """Calculates coordinates for a cylinder
     `downCirc`: height of lower area of the cylinder
     `upCirc`: height of upper area of the cylinder
@@ -253,7 +253,7 @@ def cylinder(downCirc=-120, upCirc=-80, radius=30, resolution=30):
     return cylinderPos
 
 
-def cone(maxRadius=30, resolution=30, n=5, robotHeight=-130):
+def cone(maxRadius=25, resolution=30, n=5, robotHeight=-130):
     """Calculates coordinates for a spiral
     `maxRadius`: Max radius of the spiral
     `resolution`: Number of circlepoints of one circle
@@ -320,7 +320,6 @@ def elaboratedCurve(radius=20, resolution=28, robotHeight=-100, distx=20, disty=
         elaboratedCurvePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
 
     elaboratedCurvePos.append([0, -disty, robotHeight, 0, 0, 0, 'lin'])
-    time.sleep(2)  # TODO: Sleep wegmachen
 
     elaboratedCurvePos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     # return elaboratedCurvePos
