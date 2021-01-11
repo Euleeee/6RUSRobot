@@ -1,9 +1,10 @@
 import math as m
 import numpy as np
 import time
+endHeight = -120 # final height of the robot at the end of every demo programm
 
 
-def square(halfSideLength=30, robotHeight=-100, n=2):
+def square(halfSideLength=25, robotHeight=-100, n=2):
     """Calculates coordinates for a square
         `halfSideLength`: half length of the edge
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
@@ -36,12 +37,12 @@ def square(halfSideLength=30, robotHeight=-100, n=2):
 
     posSquare.append([halfSideLength, halfSideLength,
                       robotHeight, 0, 0, 0, 'lin'])
-    posSquare.append([0, 0, -120, 0, 0, 0, 'mov'])
+    posSquare.append([0, 0, endHeight, 0, 0, 0, 'mov'])
 
     return posSquare
 
 
-def triangle(halfSideLength=40, robotHeight=-100, n=2):
+def triangle(halfSideLength=30, robotHeight=-100, n=2):
     """Calculates coordinates for a samesided triangle
         `halfSideLength`: half sidelength of the triangle
         `robotHeight`: z-Coordinate for 2D model (have to be a negative value)
@@ -69,11 +70,11 @@ def triangle(halfSideLength=40, robotHeight=-100, n=2):
         posTriangle.append([hHalf, 0, robotHeight, 0, 0, 0, 'lin'])
 
     posTriangle.append([-hHalf, halfSideLength, robotHeight, 0, 0, 0, 'lin'])
-    posTriangle.append([0, 0, -120, 0, 0, 0, 'mov'])
+    posTriangle.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     return posTriangle
 
 
-def circle(radius=40, resolution=30, robotHeight=-100, n=2, dir=0):
+def circle(radius=35, resolution=30, robotHeight=-100, n=2, dir=0):
     """Calculates coordinates for a 2D-circle
         `radius`: Radius of the circle
         `resolution`: Number of circlepoints
@@ -95,11 +96,11 @@ def circle(radius=40, resolution=30, robotHeight=-100, n=2, dir=0):
 
         circlePos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
 
-    circlePos.append([0, 0, -120, 0, 0, 0, 'mov'])
+    circlePos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     return circlePos
 
 
-def eight(radius=20, resolution=30, robotHeight=-100, n=1):
+def eight(radius=15, resolution=30, robotHeight=-100, n=1):
     """Calculates coordinates for a 2D-eight
         `radius`: Radius of one of the two circles
         `resolution`: Number of circlepoints
@@ -122,11 +123,11 @@ def eight(radius=20, resolution=30, robotHeight=-100, n=1):
         y = -m.cos(num)*radius + radius
         eightPos.append([x, y, robotHeight, 0, 0, 0, 'mov'])
 
-    eightPos.append([0, 0, -120, 0, 0, 0, 'mov'])
+    eightPos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     return eightPos
 
 
-def pyramide(halfSideLength=25, robotHeight=-110):
+def pyramide(halfSideLength=30, robotHeight=-110):
     """Calculates coordinates for a tetrahedron
         `halfSideLength`: half sidelength of the tetrahedron
         `robotHeight`: z-Coordinate for 2D Base (have to be a negative value)
@@ -150,13 +151,13 @@ def pyramide(halfSideLength=25, robotHeight=-110):
         [-hBaseHalf, -halfSideLength, robotHeight, 0, 0, 0, 'lin'],
         [0, 0, robotHeight+hTetra, 0, 0, 0, 'mov'],
 
-        [0, 0, -120, 0, 0, 0, 'mov']
+        [0, 0, endHeight, 0, 0, 0, 'mov']
     ]
 
     return pyramidePos
 
 
-def pickPlace(distx=20, disty=20, midDist=30, defaultHeight=-80, linHeight=20, robotHeight=-110):
+def pickPlace(distx=15, disty=15, midDist=25, defaultHeight=-80, linHeight=20, robotHeight=-110):
     """Calculates coordinates for a 3x2 palette
         `distx`: Distance between the palette places in x direction
         `disty`: Distance between the palette places in y direction
@@ -190,7 +191,7 @@ def pickPlace(distx=20, disty=20, midDist=30, defaultHeight=-80, linHeight=20, r
 
             pickPlacePos.append([numx*distx, 0, defaultHeight, 0, 0, 0, 'mov'])
 
-    pickPlacePos.append([0, 0, -120, 0, 0, 0, 'mov'])
+    pickPlacePos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     return pickPlacePos
 
 
@@ -222,7 +223,7 @@ def rectangleSignal(flankHeight=50, flankWidth=15, robotHeight=-100):
         [flankHeight/2, 2.5*flankWidth, robotHeight, 0, 0, 0, 'mov']
     ]
 
-    rectanglePos.append([0, 0, -120, 0, 0, 0, 'mov'])
+    rectanglePos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     return rectanglePos
 
 
@@ -248,11 +249,11 @@ def cylinder(downCirc=-120, upCirc=-80, radius=30, resolution=30):
 
         cylinderPos.append([x, y, upCirc, 0, 0, 0, 'mov'])
 
-    cylinderPos.append([0, 0, -120, 0, 0, 0, 'mov'])
+    cylinderPos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     return cylinderPos
 
 
-def cone(maxRadius=40, resolution=30, n=5, robotHeight=-130):
+def cone(maxRadius=30, resolution=30, n=5, robotHeight=-130):
     """Calculates coordinates for a spiral
     `maxRadius`: Max radius of the spiral
     `resolution`: Number of circlepoints of one circle
@@ -270,6 +271,8 @@ def cone(maxRadius=40, resolution=30, n=5, robotHeight=-130):
         y = m.sin(num)*r[i]
         z = robotHeight + 1.5*r[i]
         spiralPos.append([x, y, z, 0, 0, 0, 'mov'])
+
+    spiralPos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
 
     return spiralPos
 
@@ -319,7 +322,7 @@ def elaboratedCurve(radius=20, resolution=28, robotHeight=-100, distx=20, disty=
     elaboratedCurvePos.append([0, -disty, robotHeight, 0, 0, 0, 'lin'])
     time.sleep(2)  # TODO: Sleep wegmachen
 
-    elaboratedCurvePos.append([0, 0, -120, 0, 0, 0, 'mov'])
+    elaboratedCurvePos.append([0, 0, endHeight, 0, 0, 0, 'mov'])
     # return elaboratedCurvePos
     return elaboratedCurvePos
 
