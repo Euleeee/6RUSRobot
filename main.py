@@ -127,24 +127,25 @@ def move_with_demo(robot):
     """Selects a random demo programm and executes it"""
 
     modules = list_of_modules(demo)
-    prog = random.choice(modules)  # choose a random demo
-    demoPosList = prog()  # execute chosen demo programm
+    for prog in modules:
+        #prog = random.choice(modules)  # choose a random demo
+        demoPosList = prog()  # execute chosen demo programm
 
-    global robotMode
+        global robotMode
 
-    for pos in demoPosList:
-        try:
-            if pos[6] == 'lin':
-                coord = pos[:6]  # extract only pose
-                robot.mov_lin(coord)  # move linear
-            elif pos[6] == 'mov':
-                coord = pos[:6]  # extract only pose
-                robot.mov(coord)  # move with PTP-interplation
-        except IndexError:
-            robot.mov(pos)  # if 'lin' or 'mov' wasent given, use mov/PTP
-        
-        if not robotMode == 'demo':  # break if the mode was changed
-            break
+        for pos in demoPosList:
+            try:
+                if pos[6] == 'lin':
+                    coord = pos[:6]  # extract only pose
+                    robot.mov_lin(coord)  # move linear
+                elif pos[6] == 'mov':
+                    coord = pos[:6]  # extract only pose
+                    robot.mov(coord)  # move with PTP-interplation
+            except IndexError:
+                robot.mov(pos)  # if 'lin' or 'mov' wasent given, use mov/PTP
+            
+            if not robotMode == 'demo':  # break if the mode was changed
+                break
         
 
 def list_of_modules(packageName):
